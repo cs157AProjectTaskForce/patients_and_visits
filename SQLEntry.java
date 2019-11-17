@@ -49,6 +49,6 @@ public class SQLLoader
     // Entries that will be inserted into the tables
     // ex: "insert into TABLE_NAME values (ATTRIBUTES_VALUES...)"
     static String[]	InsertRows = {
-            
+
     };
 }
