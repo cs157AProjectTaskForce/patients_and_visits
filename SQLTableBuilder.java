@@ -2,21 +2,28 @@ import java.sql.*;
 
 public class SQLBuilder
 {
-    public static String USERNAME = new String("username");
-    public static String PASSWORD = new String("passwd");
-    public static String DB_URL = new String("jdbc:mysql://localhost:3306/DB_NAME_REPLACE");
+    public static String USERNAME = new String("alvin");
+    public static String PASSWORD = new String("cs157apass");
+    public static String DB_URL = new String("jdbc:mysql://localhost:3306/test");
     public static String JDBC_DRIVER = new String("com.mysql.jdbc.Driver");
     // SQL Statements to create tables, formatted as strings.
     private static String[]	Tables = {
-            "create table STATE (" +
-                    "ABBREVIATION char(2) not null, " +
-                    "NAME varchar(32) not null, " +
-                    "ENTERED_UNION date null, " +
-                    "CAPITAL varchar(32) not null, " +
-                    "REGION varchar(16) not null, " +
-                    "AREA int not null, " +
-                    "FLOWER varchar(32) null, " +
-                    "BIRD varchar(32) null)"
+            "create table PATIENT (" +
+                    "FIRST_NAME varchar(32) not null, " +
+                    "MIDDLE_NAME varchar(32), " +
+                    "LAST_NAME varchar(32) not null, " +
+                    "DATE_OF_BIRTH date not null, " +
+                    "GENDER char(1) not null, " +
+                    "PHONE varchar(15) not null, " +
+                    "EMAIL varchar(40), " +
+                    "STREET varchar(32) not null + " +
+                    "CITY varchar(32) not null, " +
+                    "STATE char(2), " +
+                    "ZIP int(10) not null, " +
+                    "COUNTRY varchar(20) not null, " +
+                    "PHOTO blob , " +
+                    "SSN int(9), " +
+                    "INSURANCE varchar(30),)"
     };
 
     public static void main(String[] args) throws ClassNotFoundException
