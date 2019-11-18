@@ -16,16 +16,15 @@ public class SQLTableBuilder
                     "GENDER char(1) not null, " +
                     "PHONE varchar(15) not null, " +
                     "EMAIL varchar(40), " +
-                    "STREET varchar(32) not null + " +
+                    "STREET varchar(32) not null, " +
                     "CITY varchar(32) not null, " +
                     "STATE char(2), " +
                     "ZIP int(10) not null, " +
                     "COUNTRY varchar(20) not null, " +
-                    "PHOTO blob , " +
+                    "PHOTO blob(100), " +
                     "SSN int(9), " +
-                    "INSURANCE varchar(30),)"
+                    "INSURANCE varchar(30))"
     };
-
     public static void main(String[] args) throws ClassNotFoundException
     {
 
