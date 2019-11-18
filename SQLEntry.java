@@ -20,7 +20,7 @@ public class SQLEntry
             Connection con = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 
             // Print driver metadata
-            SQLUtil.printDriverInfo(con);
+            SQLHelper.printDriverInfo(con);
 
             // Create a Statement object so we can submit SQL statements to the driver
             Statement stmt = con.createStatement();
@@ -42,7 +42,7 @@ public class SQLEntry
         }
         catch (SQLException e)
         {
-            SQLUtil.printSQLExceptions(e);
+            SQLHelper.printSQLExceptions(e);
         }
     }
 
