@@ -1,8 +1,3 @@
-/* This sample shows how to connect and compile a JDBC program
- You should have Driver for your database installed.
-*/
-
-// You need to import the java.sql package to use JDBC
 import java.sql.*;
 
 class JDBCConnection

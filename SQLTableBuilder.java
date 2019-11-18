@@ -23,7 +23,23 @@ public class SQLTableBuilder
                     "COUNTRY varchar(20) not null, " +
                     "PHOTO blob(100), " +
                     "SSN int(9), " +
-                    "INSURANCE varchar(30))"
+                    "INSURANCE varchar(30))"   ,
+
+            "create table VISIT (" +
+                    "ID int(15) not null, " +
+                    "DATE date not null, " +
+                    "THC int(15) not null, " +
+                    "FIRST_NAME varchar(32) not null, " +
+                    "MIDDLE_NAME varchar(32), " +
+                    "LAST_NAME varchar(32) not null, " +
+                    "CATEGORY int(1) not null, " +
+                    "PROTOCOL int(1) not null, " +
+                    "INSTRUMENT char(8) not null, " +
+                    "REM char(3) not null, " +
+                    "FU varchar(20), " +
+                    "COMMENTS varchar(150), " +
+                    "NEXT_VISIT date not null)"
+
     };
     public static void main(String[] args) throws ClassNotFoundException
     {
