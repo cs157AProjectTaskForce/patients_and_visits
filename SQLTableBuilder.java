@@ -9,6 +9,7 @@ public class SQLTableBuilder
     // SQL Statements to create tables, formatted as strings.
     private static String[]	Tables = {
             "create table PATIENT (" +
+                    "THC int(15) not null PRIMARY KEY,"
                     "FIRST_NAME varchar(32) not null, " +
                     "MIDDLE_NAME varchar(32), " +
                     "LAST_NAME varchar(32) not null, " +
@@ -26,7 +27,7 @@ public class SQLTableBuilder
                     "INSURANCE varchar(30))"   ,
 
             "create table VISIT (" +
-                    "ID int(15) not null, " +
+                    "ID int(15) not null PRIMARY KEY, " +
                     "DATE date not null, " +
                     "THC int(15) not null, " +
                     "FIRST_NAME varchar(32) not null, " +
