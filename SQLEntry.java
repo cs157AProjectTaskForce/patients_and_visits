@@ -1,6 +1,6 @@
 import java.sql.*;
 
-public class SQLLoader
+public class SQLEntry
 {
     public static String USERNAME = new String("yourname");
     public static String PASSWORD = new String("yourpasswd");

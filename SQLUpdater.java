@@ -1,6 +1,6 @@
 import java.sql.*;
 
-public class SQLBatchUpdater
+public class SQLUpdater
 {
     public static String USERNAME = new String("User");
     public static String PASSWORD = new String("pass");
@@ -19,7 +19,7 @@ public class SQLBatchUpdater
             con = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 
             // Print driver metadata
-            SQLUtil.printDriverInfo(con);
+            SQLHelper.printDriverInfo(con);
 
             // Create a Prepared Statement object so we can submit DML to the driver
             Statement stmt = con.createStatement();
@@ -52,7 +52,7 @@ public class SQLBatchUpdater
         }
         catch (SQLException e)
         {
-            SQLUtil.printSQLExceptions(e);
+            SQLHelper.printSQLExceptions(e);
             try
             {
                 System.err.println("Update failed.");
@@ -60,7 +60,7 @@ public class SQLBatchUpdater
             }
             catch (SQLException e2)
             {
-                SQLUtil.printSQLExceptions(e2);
+                SQLHelper.printSQLExceptions(e2);
             }
         }
         finally
@@ -73,7 +73,7 @@ public class SQLBatchUpdater
             }
             catch (SQLException e2)
             {
-                SQLUtil.printSQLExceptions(e2);
+                SQLHelper.printSQLExceptions(e2);
             }
         }
     }

@@ -1,6 +1,6 @@
 import java.sql.*;
 
-public class SQLBuilder
+public class SQLTableBuilder
 {
     public static String USERNAME = new String("alvin");
     public static String PASSWORD = new String("cs157apass");
@@ -35,10 +35,10 @@ public class SQLBuilder
         try
         {
             // Get a connection from the connection factory
-            Connection con = DriverManager.getConnection, DB_URL, USERNAME, PASSWORD);
+            Connection con = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 
             // Print drvier information
-            SQLUtil.printDriverInfo(con);
+            SQLHelper.printDriverInfo(con);
 
             // Create a Statement object so we can submit SQL statements to the driver
             Statement stmt = con.createStatement();
@@ -59,7 +59,7 @@ public class SQLBuilder
             con.close();
         }
         catch (SQLException e) {
-            SQLUtil.printSQLExceptions(e);
+            SQLHelper.printSQLExceptions(e);
         }
     }
 }

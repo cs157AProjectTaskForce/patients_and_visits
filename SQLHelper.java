@@ -1,6 +1,6 @@
 import java.sql.*;
 
-public class SQLUtil
+public class SQLHelper
 {
     /**
      * This method displays all columns and rows in the given result set.

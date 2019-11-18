@@ -5,7 +5,7 @@
 // You need to import the java.sql package to use JDBC
 import java.sql.*;
 
-class SimpleJDBC
+class JDBCConnection
 {
     public static void main (String args [])
             throws SQLException
