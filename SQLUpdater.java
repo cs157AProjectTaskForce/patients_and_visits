@@ -67,7 +67,7 @@ public class SQLUpdater
         {
             try
             {
-                // Close the connection
+                // Close the connection.
                 if (con != null)
                     con.close();
             }
