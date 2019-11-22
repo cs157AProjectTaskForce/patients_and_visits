@@ -35,6 +35,7 @@ public class Menu {
 			panel.add(Other);
 			
 	        frame.setContentPane(panel);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setVisible(true);
 		}
 		
@@ -61,6 +62,7 @@ public class Menu {
 			panel.add(GoBack);
 			
 	        frame.setContentPane(panel);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setVisible(true);
 		}
 		
@@ -74,6 +76,7 @@ public class Menu {
 			
 			JButton AddNewVisit = new JButton("Add New Visit");
 			AddNewVisit.setPreferredSize(new Dimension(200, 100));
+			AddNewVisit.addActionListener(event -> addNewVisit(frame));
 			panel.add(AddNewVisit);
 			
 			JButton ViewEditVisit = new JButton("View/Edit Visits");
@@ -86,11 +89,77 @@ public class Menu {
 			panel.add(GoBack);
 			
 	        frame.setContentPane(panel);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setVisible(true);
+			
+		}
+		
+		private static void addNewVisit(JFrame frame)
+		{
+			frame.setTitle("Visit");
+			frame.getContentPane().removeAll();
+			
+			JPanel header = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
+			setHeaderVisit(header);
+			
+			JButton Interview = new JButton("Interview");
+			Interview.setPreferredSize(new Dimension(100, 50));
+			header.add(Interview);
+			
+			JButton Audiology = new JButton("Audiology");
+			Audiology.setPreferredSize(new Dimension(100, 50));
+			header.add(Audiology);
+			
+			JButton MedicalOther = new JButton("Medical Other");
+			MedicalOther.setPreferredSize(new Dimension(100, 50));
+			header.add(MedicalOther);
+			
+			JButton Diagnose = new JButton("Diagnose");
+			Diagnose.setPreferredSize(new Dimension(100, 50));
+			header.add(Diagnose);
+			
+			JPanel center = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 20));
+			setCenterVisit(center);
+			
+			JButton InstrumentDetails = new JButton("Instrument Details");
+			InstrumentDetails.setPreferredSize(new Dimension(100, 50));
+			center.add(InstrumentDetails);
+			
+			JButton REMDetails = new JButton("REM Details");
+			REMDetails.setPreferredSize(new Dimension(100, 50));
+			center.add(REMDetails);
+			
+			JButton CounselingDetails = new JButton("Counseling Details");
+			CounselingDetails.setPreferredSize(new Dimension(100, 50));
+			center.add(CounselingDetails);
+			
+			JButton RecommendTreatment = new JButton("Recommend Treatment");
+			RecommendTreatment.setPreferredSize(new Dimension(100, 50));
+			center.add(RecommendTreatment);
+			
+			JPanel footer = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 20));
+			footer.setPreferredSize(new Dimension(600, 200));
+			
+			JButton Save = new JButton("Save");
+			Save.setPreferredSize(new Dimension(100, 30));
+			footer.add(Save);
+			
+			JButton Cancel = new JButton("Cancel");
+			Cancel.setPreferredSize(new Dimension(100, 30));
+			footer.add(Cancel);
+			
+			frame.add(header, "North");
+			frame.add(center, "Center");
+			frame.add(footer, "South");
+
+			frame.setSize(650, 750);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setVisible(true);
 		}
 		
 		private static void addNewPatient(JFrame frame)
 		{
+			
 			frame.setTitle("Add Patient");
 			frame.getContentPane().removeAll();
 			frame.setSize(700, 450);
@@ -98,8 +167,8 @@ public class Menu {
 			JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 20));
 			JPanel demoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 20));
 			
-			setPanel(panel, frame);
-			setDemoPanel(demoPanel, frame);
+			setPanel(panel);
+			setDemoPanel(demoPanel);
 			
 			JButton Save = new JButton("Save");
 			Save.setPreferredSize(new Dimension(100, 30));
@@ -156,6 +225,7 @@ public class Menu {
 			demoPanel.add(demoCancel);
 			
 			frame.setContentPane(panel);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setVisible(true);
 		}
 		
@@ -170,7 +240,35 @@ public class Menu {
 			panel.add(temp);
 		}
 		
-		private static void setPanel(JPanel panel, JFrame frame)
+		private static void setHeaderVisit(JPanel header)
+		{
+			header.setPreferredSize(new Dimension(600, 140));
+			addField(header, "Visit ID:");
+			addField(header, "Date:");
+			addField(header, "Patient:");
+			addField(header, "THC#:");
+			addField(header, "Visit no.");
+		}
+		
+		private static void setCenterVisit(JPanel center)
+		{
+			center.setPreferredSize(new Dimension(600, 440));
+			addField(center, "Problem:");
+			addField(center, "Category:");
+			addField(center, "Protocol:");
+			addField(center, "FU:");
+			addField(center, "Instrument");
+			addField(center, "REM:");
+			JPanel temp = new JPanel();
+			JLabel tempLabel = new JLabel("Comments:");
+			JTextArea addComments = new JTextArea(2,30);
+			temp.add(tempLabel, BorderLayout.NORTH);
+			temp.add(addComments, BorderLayout.CENTER);
+			center.add(temp);
+			addField(center, "Next Visit:");
+		}
+		
+		private static void setPanel(JPanel panel)
 		{
 			addField(panel, "First Name*");
 			addField(panel, "Last Name*");
@@ -190,7 +288,7 @@ public class Menu {
 		
 		
 		
-		private static void setDemoPanel(JPanel demoPanel, JFrame frame)
+		private static void setDemoPanel(JPanel demoPanel)
 		{
 			addField(demoPanel, "Occupation");
 			addField(demoPanel, "Work Status");
@@ -207,4 +305,5 @@ public class Menu {
 			temp.add(addComments, BorderLayout.CENTER);
 			demoPanel.add(temp);
 		}
+		
 }
