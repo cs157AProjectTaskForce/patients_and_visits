@@ -1,5 +1,10 @@
 import java.awt.*;
+import java.util.List;
+
 import javax.swing.*;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 public class Menu {
 
@@ -54,6 +59,7 @@ public class Menu {
 			
 			JButton ViewEditPatient = new JButton("View/Edit Patient");
 			ViewEditPatient.setPreferredSize(new Dimension(200, 100));
+			ViewEditPatient.addActionListener(event -> viewPatients(frame));
 			panel.add(ViewEditPatient);
 			
 			JButton GoBack = new JButton("Go Back");
@@ -81,6 +87,7 @@ public class Menu {
 			
 			JButton ViewEditVisit = new JButton("View/Edit Visits");
 			ViewEditVisit.setPreferredSize(new Dimension(200, 100));
+			ViewEditVisit.addActionListener(event -> viewVisits(frame));
 			panel.add(ViewEditVisit);
 			
 			JButton GoBack = new JButton("Go Back");
@@ -146,6 +153,7 @@ public class Menu {
 			
 			JButton Cancel = new JButton("Cancel");
 			Cancel.setPreferredSize(new Dimension(100, 30));
+			Cancel.addActionListener(event -> displayVisit(frame));
 			footer.add(Cancel);
 			
 			frame.add(header, "North");
@@ -174,7 +182,7 @@ public class Menu {
 			Save.setPreferredSize(new Dimension(100, 30));
 			Save.addActionListener(event -> {
 				//save the data to SQL database
-				//SQLSend();
+				//SavePatient();
 				displayPatient(frame);
 			});
 			panel.add(Save);
@@ -183,7 +191,8 @@ public class Menu {
 			demoSave.setPreferredSize(new Dimension(100, 30));
 			demoSave.addActionListener(event -> {
 				//save the data to SQL database
-				//SQLSend();
+				//SavePatient();
+				//SaveDemographics();
 				displayPatient(frame);
 			});
 			demoPanel.add(demoSave);
@@ -206,12 +215,23 @@ public class Menu {
 			
 			JButton newVisit = new JButton("New Visit");
 			newVisit.setPreferredSize(new Dimension(100, 30));
-			newVisit.addActionListener(event -> displayPatient(frame));
+			newVisit.addActionListener(event -> 
+			{
+				//save patient first, then new screen.
+				//savePatient();
+				addNewVisit(frame);
+				
+			});
 			panel.add(newVisit);
 			
 			JButton demoNewVisit = new JButton("New Visit");
 			demoNewVisit.setPreferredSize(new Dimension(100, 30));
-			demoNewVisit.addActionListener(event -> displayPatient(frame));
+			demoNewVisit.addActionListener(event -> {
+				//save patient first, then new screen
+				//savePatient();
+				//saveDemographics();
+				addNewVisit(frame);
+			});
 			demoPanel.add(demoNewVisit);
 			
 			JButton Cancel = new JButton("Cancel");
@@ -228,6 +248,112 @@ public class Menu {
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setVisible(true);
 		}
+		
+		//Basic framework for it. This creates the table. We need columns = table columns and data = entries in database.
+		private static void viewPatients(JFrame frame)
+		{
+			frame.setTitle("View/Edit Patients");
+			frame.getContentPane().removeAll();
+			frame.setSize(900, 450);
+			
+			JPanel view = new JPanel(new BorderLayout(20, 20));
+			JPanel options = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
+			//Call SQL command to retrieve the Patient Table
+			//add column names to String[] columns
+			String[] columns = {"Test", "Test2"};
+			//Iterate through the returned data and add it to JTable.	
+			Object[][] data = {{"Test4", "Test4"}, {"Test5", "Test25"}, {"Ok", "Ok"}};
+			
+			JTable patientTable = new JTable(data, columns) {
+				public boolean isCellEditable(int rowIndex, int colIndex) {
+					return false;
+				}
+			};
+			patientTable.setRowSelectionAllowed(true);
+			patientTable.setAutoCreateRowSorter(true);
+			JScrollPane scrollPane = new JScrollPane(patientTable);
+			
+			JButton viewPatient = new JButton("View Patient");
+			viewPatient.setPreferredSize(new Dimension(125, 30));
+			options.add(viewPatient);
+			
+			JButton EditPatient = new JButton("Edit Patient");
+			EditPatient.setPreferredSize(new Dimension(125, 30));
+			options.add(EditPatient);
+			
+			JButton deletePatient = new JButton("Delete Patient");
+			deletePatient.setPreferredSize(new Dimension(125, 30));
+			options.add(deletePatient);
+			
+			JButton addVisit = new JButton("Add New Visit");
+			addVisit.setPreferredSize(new Dimension(125, 30));
+			options.add(addVisit);
+			
+			JButton currentVisit = new JButton("Show Current Visit");
+			currentVisit.setPreferredSize(new Dimension(125, 30));
+			options.add(currentVisit);
+			
+			JButton Cancel = new JButton("Cancel");
+			Cancel.setPreferredSize(new Dimension(100, 30));
+			Cancel.addActionListener(event -> displayPatient(frame));
+			options.add(Cancel);
+			
+			view.add(scrollPane, BorderLayout.CENTER);
+			view.add(options, BorderLayout.SOUTH);
+			
+			frame.setContentPane(view);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setVisible(true);
+		}
+		
+		private static void viewVisits(JFrame frame)
+		{
+			frame.setTitle("View/Edit Visits");
+			frame.getContentPane().removeAll();
+			frame.setSize(900, 450);
+			
+			JPanel view = new JPanel(new BorderLayout(20, 20));
+			JPanel options = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
+			//Call SQL command to retrieve the Visits Table
+			//add column names to String[] columns
+			String[] columns = {"New", "Stuff"};
+			//Iterate through the returned data and add it to JTable.	
+			Object[][] data = {{"Visit", "Visiting"}, {"Abra", "Kadabra"}};
+			
+			JTable visitTable = new JTable(data, columns) {
+				public boolean isCellEditable(int rowIndex, int colIndex) {
+					return false;
+				}
+			};
+			visitTable.setRowSelectionAllowed(true);
+			visitTable.setAutoCreateRowSorter(true);
+			JScrollPane scrollPane = new JScrollPane(visitTable);
+			
+			JButton viewVisit = new JButton("View/Edit Visit");
+			viewVisit.setPreferredSize(new Dimension(125, 30));
+			options.add(viewVisit);
+			
+			JButton deleteVisit = new JButton("Delete Visit");
+			deleteVisit.setPreferredSize(new Dimension(125, 30));
+			options.add(deleteVisit);
+			
+			JButton Analyze = new JButton("Analyze");
+			Analyze.setPreferredSize(new Dimension(125, 30));
+			options.add(Analyze);
+			
+			JButton Cancel = new JButton("Cancel");
+			Cancel.setPreferredSize(new Dimension(100, 30));
+			Cancel.addActionListener(event -> displayVisit(frame));
+			options.add(Cancel);
+			
+			view.add(scrollPane, BorderLayout.CENTER);
+			view.add(options, BorderLayout.SOUTH);
+			
+			frame.setContentPane(view);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setVisible(true);
+		}
+		
 		
 		private static void addField(JPanel panel, String label)
 		{
@@ -307,3 +433,4 @@ public class Menu {
 		}
 		
 }
+
