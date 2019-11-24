@@ -27,7 +27,10 @@ public class SQLTableBuilder
                     /*****************************/
                     "PHOTO blob(100), " +
                     "SSN int(9), " +
-                    "INSURANCE varchar(30))"
+                    "INSURANCE varchar(30)," +
+                    "FOREIGN KEY (patient_city, patient_zip) REFERENCES Zip(ID, CITY)" +
+                    "FOREIGN KEY patient_state REFERENCES State(NAME)" +
+                    "FOREIGN KEY patient_country REFERENCES Country(NAME))"
             ,
 
             "create table Visit (" +
@@ -74,6 +77,7 @@ public class SQLTableBuilder
                     "JOB_NAME varchar(20) not null, " +
                     "DEGREE varchar(20))"
     };
+
     public static void main(String[] args) throws ClassNotFoundException
     {
 
