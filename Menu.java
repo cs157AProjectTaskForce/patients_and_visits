@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.*;
@@ -101,70 +102,6 @@ public class Menu {
 			
 		}
 		
-		private static void addNewVisit(JFrame frame)
-		{
-			frame.setTitle("Visit");
-			frame.getContentPane().removeAll();
-			
-			JPanel header = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
-			setHeaderVisit(header);
-			
-			JButton Interview = new JButton("Interview");
-			Interview.setPreferredSize(new Dimension(100, 50));
-			header.add(Interview);
-			
-			JButton Audiology = new JButton("Audiology");
-			Audiology.setPreferredSize(new Dimension(100, 50));
-			header.add(Audiology);
-			
-			JButton MedicalOther = new JButton("Medical Other");
-			MedicalOther.setPreferredSize(new Dimension(100, 50));
-			header.add(MedicalOther);
-			
-			JButton Diagnose = new JButton("Diagnose");
-			Diagnose.setPreferredSize(new Dimension(100, 50));
-			header.add(Diagnose);
-			
-			JPanel center = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 20));
-			setCenterVisit(center);
-			
-			JButton InstrumentDetails = new JButton("Instrument Details");
-			InstrumentDetails.setPreferredSize(new Dimension(100, 50));
-			center.add(InstrumentDetails);
-			
-			JButton REMDetails = new JButton("REM Details");
-			REMDetails.setPreferredSize(new Dimension(100, 50));
-			center.add(REMDetails);
-			
-			JButton CounselingDetails = new JButton("Counseling Details");
-			CounselingDetails.setPreferredSize(new Dimension(100, 50));
-			center.add(CounselingDetails);
-			
-			JButton RecommendTreatment = new JButton("Recommend Treatment");
-			RecommendTreatment.setPreferredSize(new Dimension(100, 50));
-			center.add(RecommendTreatment);
-			
-			JPanel footer = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 20));
-			footer.setPreferredSize(new Dimension(600, 200));
-			
-			JButton Save = new JButton("Save");
-			Save.setPreferredSize(new Dimension(100, 30));
-			footer.add(Save);
-			
-			JButton Cancel = new JButton("Cancel");
-			Cancel.setPreferredSize(new Dimension(100, 30));
-			Cancel.addActionListener(event -> displayVisit(frame));
-			footer.add(Cancel);
-			
-			frame.add(header, "North");
-			frame.add(center, "Center");
-			frame.add(footer, "South");
-
-			frame.setSize(650, 750);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.setVisible(true);
-		}
-		
 		private static void addNewPatient(JFrame frame)
 		{
 			
@@ -172,20 +109,30 @@ public class Menu {
 			frame.getContentPane().removeAll();
 			frame.setSize(700, 450);
 			
-			JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 20));
-			JPanel demoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 20));
+			JPanel mainPanel = new JPanel(new BorderLayout(10, 20));
+			JPanel mainDemo = new JPanel(new BorderLayout(10, 20));
 			
-			setPanel(panel);
-			setDemoPanel(demoPanel);
+			List<JTextField> panelText = new ArrayList<JTextField>();
+			List<JTextField> demoText = new ArrayList<JTextField>();
+			List<JTextArea> demoArea = new ArrayList<JTextArea>();
+			
+			JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 20));
+			JPanel panelFooter = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 20));
+			JPanel demoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 20));
+			JPanel demoFooter = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 20));
+			
+			setPanel(panel, panelText);
+			setDemoPanel(demoPanel, demoText, demoArea);
 			
 			JButton Save = new JButton("Save");
 			Save.setPreferredSize(new Dimension(100, 30));
 			Save.addActionListener(event -> {
 				//save the data to SQL database
 				//SavePatient();
+				//panelText holds all the content in the textFields.
 				displayPatient(frame);
 			});
-			panel.add(Save);
+			panelFooter.add(Save);
 			
 			JButton demoSave = new JButton("Save");
 			demoSave.setPreferredSize(new Dimension(100, 30));
@@ -193,25 +140,26 @@ public class Menu {
 				//save the data to SQL database
 				//SavePatient();
 				//SaveDemographics();
+				//Demo text and Demo Area hold all the content in the textfields.
 				displayPatient(frame);
 			});
-			demoPanel.add(demoSave);
+			demoFooter.add(demoSave);
 			
 			JButton addDemographics = new JButton("Add Demographics");
 			addDemographics.setPreferredSize(new Dimension(100, 30));
 			addDemographics.addActionListener(event -> {
-				frame.setContentPane(demoPanel);
+				frame.setContentPane(mainDemo);
 				frame.setVisible(true);
 			});
-			panel.add(addDemographics);
+			panelFooter.add(addDemographics);
 			
 			JButton back = new JButton("Back");
 			back.setPreferredSize(new Dimension(100, 30));
 			back.addActionListener(event -> {
-				frame.setContentPane(panel);
+				frame.setContentPane(mainPanel);
 				frame.setVisible(true);
 			});
-			demoPanel.add(back);
+			demoFooter.add(back);
 			
 			JButton newVisit = new JButton("New Visit");
 			newVisit.setPreferredSize(new Dimension(100, 30));
@@ -219,10 +167,11 @@ public class Menu {
 			{
 				//save patient first, then new screen.
 				//savePatient();
+				displayVisit(frame);
 				addNewVisit(frame);
 				
 			});
-			panel.add(newVisit);
+			panelFooter.add(newVisit);
 			
 			JButton demoNewVisit = new JButton("New Visit");
 			demoNewVisit.setPreferredSize(new Dimension(100, 30));
@@ -230,21 +179,115 @@ public class Menu {
 				//save patient first, then new screen
 				//savePatient();
 				//saveDemographics();
+				displayVisit(frame);
 				addNewVisit(frame);
 			});
-			demoPanel.add(demoNewVisit);
+			demoFooter.add(demoNewVisit);
 			
 			JButton Cancel = new JButton("Cancel");
 			Cancel.setPreferredSize(new Dimension(100, 30));
 			Cancel.addActionListener(event -> displayPatient(frame));
-			panel.add(Cancel);
+			panelFooter.add(Cancel);
 			
 			JButton demoCancel = new JButton("Cancel");
 			demoCancel.setPreferredSize(new Dimension(100, 30));
 			demoCancel.addActionListener(event -> displayPatient(frame));
-			demoPanel.add(demoCancel);
+			demoFooter.add(demoCancel);
 			
-			frame.setContentPane(panel);
+			mainPanel.add(panel, BorderLayout.CENTER);
+			mainPanel.add(panelFooter, BorderLayout.SOUTH);
+			mainDemo.add(demoPanel, BorderLayout.CENTER);
+			mainDemo.add(demoFooter, BorderLayout.SOUTH);
+			
+			frame.setContentPane(mainPanel);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setVisible(true);
+		}
+		
+		private static void addNewVisit(JFrame frame)
+		{
+			frame.setTitle("Add New Visit");
+			frame.getContentPane().removeAll();
+			frame.setSize(650, 750);
+			
+			List<JTextField> headerText = new ArrayList<JTextField>();
+			List<JTextField> centerText = new ArrayList<JTextField>();
+			List<JTextArea> centerArea = new ArrayList<JTextArea>();
+			
+			JPanel mainHeader = new JPanel(new BorderLayout(10, 30));
+			JPanel header = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
+			header.setPreferredSize(new Dimension(600, 100));
+			JPanel buttonHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
+			setHeaderVisit(header, headerText);
+			
+			JButton Interview = new JButton("Interview");
+			Interview.setPreferredSize(new Dimension(100, 50));
+			buttonHeader.add(Interview);
+			
+			JButton Audiology = new JButton("Audiology");
+			Audiology.setPreferredSize(new Dimension(100, 50));
+			buttonHeader.add(Audiology);
+			
+			JButton MedicalOther = new JButton("Medical Other");
+			MedicalOther.setPreferredSize(new Dimension(100, 50));
+			buttonHeader.add(MedicalOther);
+			
+			JButton Diagnose = new JButton("Diagnose");
+			Diagnose.setPreferredSize(new Dimension(100, 50));
+			buttonHeader.add(Diagnose);
+			
+			JPanel mainCenter = new JPanel(new BorderLayout(10, 30));
+			JPanel center = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 20));
+			center.setPreferredSize(new Dimension(600, 260));
+			JPanel buttonCenter = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 20));
+			setCenterVisit(center, centerText, centerArea);
+			
+			JButton InstrumentDetails = new JButton("Instrument Details");
+			InstrumentDetails.setPreferredSize(new Dimension(100, 50));
+			buttonCenter.add(InstrumentDetails);
+			
+			JButton REMDetails = new JButton("REM Details");
+			REMDetails.setPreferredSize(new Dimension(100, 50));
+			buttonCenter.add(REMDetails);
+			
+			JButton CounselingDetails = new JButton("Counseling Details");
+			CounselingDetails.setPreferredSize(new Dimension(100, 50));
+			buttonCenter.add(CounselingDetails);
+			
+			JButton RecommendTreatment = new JButton("Recommend Treatment");
+			RecommendTreatment.setPreferredSize(new Dimension(100, 50));
+			buttonCenter.add(RecommendTreatment);
+			
+			JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 30, 20));
+			footer.setPreferredSize(new Dimension(600, 200));
+			
+			JButton Save = new JButton("Save");
+			Save.setPreferredSize(new Dimension(100, 30));
+			Save.addActionListener(event -> {
+				for(int i = 0; i < headerText.size(); i++) {
+					System.out.println(headerText.get(i).getText());
+				}
+				for(int j = 0; j < centerText.size(); j++) {
+					System.out.println(centerText.get(j).getText());
+				}
+				System.out.println(centerArea.get(0).getText());
+			});
+			footer.add(Save);
+			
+			JButton Cancel = new JButton("Cancel");
+			Cancel.setPreferredSize(new Dimension(100, 30));
+			Cancel.addActionListener(event -> displayVisit(frame));
+			footer.add(Cancel);
+			
+			mainHeader.add(header, BorderLayout.CENTER);
+			mainHeader.add(buttonHeader, BorderLayout.SOUTH);
+			mainCenter.add(center, BorderLayout.CENTER);
+			mainCenter.add(buttonCenter, BorderLayout.SOUTH);
+			
+			frame.add(mainHeader, BorderLayout.NORTH);
+			frame.add(mainCenter, BorderLayout.CENTER);
+			frame.add(footer, BorderLayout.SOUTH);
+
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setVisible(true);
 		}
@@ -354,8 +397,7 @@ public class Menu {
 			frame.setVisible(true);
 		}
 		
-		
-		private static void addField(JPanel panel, String label)
+		private static void addTextField(JPanel panel, List<JTextField> list, String label)
 		{
 			JPanel temp = new JPanel();
 			JLabel tempLabel = new JLabel(label);
@@ -364,73 +406,72 @@ public class Menu {
 			temp.add(tempLabel, BorderLayout.NORTH);
 			temp.add(tempField, BorderLayout.CENTER);
 			panel.add(temp);
+			list.add(tempField);
 		}
 		
-		private static void setHeaderVisit(JPanel header)
+		private static void setHeaderVisit(JPanel header, List<JTextField> list)
 		{
-			header.setPreferredSize(new Dimension(600, 140));
-			addField(header, "Visit ID:");
-			addField(header, "Date:");
-			addField(header, "Patient:");
-			addField(header, "THC#:");
-			addField(header, "Visit no.");
+			addTextField(header, list, "Visit ID:");
+			addTextField(header, list, "Date:");
+			addTextField(header, list, "Patient:");
+			addTextField(header, list, "THC#:");
+			addTextField(header, list, "Visit no.");
 		}
 		
-		private static void setCenterVisit(JPanel center)
+		private static void setCenterVisit(JPanel center, List<JTextField> list, List<JTextArea> area)
 		{
-			center.setPreferredSize(new Dimension(600, 440));
-			addField(center, "Problem:");
-			addField(center, "Category:");
-			addField(center, "Protocol:");
-			addField(center, "FU:");
-			addField(center, "Instrument");
-			addField(center, "REM:");
+			addTextField(center, list, "Problem:");
+			addTextField(center, list, "Category:");
+			addTextField(center, list, "Protocol:");
+			addTextField(center, list, "FU:");
+			addTextField(center, list, "Instrument");
+			addTextField(center, list, "REM:");
 			JPanel temp = new JPanel();
 			JLabel tempLabel = new JLabel("Comments:");
 			JTextArea addComments = new JTextArea(2,30);
 			temp.add(tempLabel, BorderLayout.NORTH);
 			temp.add(addComments, BorderLayout.CENTER);
 			center.add(temp);
-			addField(center, "Next Visit:");
+			area.add(addComments);
+			addTextField(center, list, "Next Visit:");
 		}
 		
-		private static void setPanel(JPanel panel)
+		private static void setPanel(JPanel panel, List<JTextField> list)
 		{
-			addField(panel, "First Name*");
-			addField(panel, "Last Name*");
-			addField(panel, "Middle Name");
-			addField(panel, "Date of Birth* (MM-DD-YYYY)");
-			addField(panel, "Gender* (M/F)");
-			addField(panel, "Phone Number*");
-			addField(panel, "Email");
-			addField(panel, "Street Address*");
-			addField(panel, "City*");
-			addField(panel, "State");
-			addField(panel, "Zip*");
-			addField(panel, "Country*");
-			addField(panel, "Social Security Number");
-			addField(panel, "Insurance");	
+			addTextField(panel, list, "First Name*");
+			addTextField(panel, list, "Last Name*");
+			addTextField(panel, list, "Middle Name");
+			addTextField(panel, list, "Date of Birth* (MM-DD-YYYY)");
+			addTextField(panel, list, "Gender* (M/F)");
+			addTextField(panel, list, "Phone Number*");
+			addTextField(panel, list, "Email");
+			addTextField(panel, list, "Street Address*");
+			addTextField(panel, list, "City*");
+			addTextField(panel, list, "State");
+			addTextField(panel, list, "Zip*");
+			addTextField(panel, list, "Country*");
+			addTextField(panel, list, "Social Security Number");
+			addTextField(panel, list, "Insurance");	
 		}
-		
-		
-		
-		private static void setDemoPanel(JPanel demoPanel)
+
+		private static void setDemoPanel(JPanel demoPanel, List<JTextField> list, List<JTextArea> area)
 		{
-			addField(demoPanel, "Occupation");
-			addField(demoPanel, "Work Status");
-			addField(demoPanel, "Educational Degree");
-			addField(demoPanel, "Tinnitus Onset");
-			addField(demoPanel, "Tinnitus Etiology");
-			addField(demoPanel, "Hyperacusis Onset");
-			addField(demoPanel, "Hyperacusis Etiology");
+			addTextField(demoPanel, list, "Occupation");
+			addTextField(demoPanel, list, "Work Status");
+			addTextField(demoPanel, list, "Educational Degree");
+			addTextField(demoPanel, list, "Tinnitus Onset");
+			addTextField(demoPanel, list, "Tinnitus Etiology");
+			addTextField(demoPanel, list, "Hyperacusis Onset");
+			addTextField(demoPanel, list, "Hyperacusis Etiology");
 			
 			JPanel temp = new JPanel();
 			JLabel tempLabel = new JLabel("Additional Comments");
-			JTextArea addComments = new JTextArea(10,15);
+			JTextArea addComments = new JTextArea(10,30);
+			addComments.setLineWrap(true);
 			temp.add(tempLabel, BorderLayout.NORTH);
 			temp.add(addComments, BorderLayout.CENTER);
 			demoPanel.add(temp);
+			area.add(addComments);
 		}
 		
 }
-
