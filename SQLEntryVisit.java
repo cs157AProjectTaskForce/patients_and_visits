@@ -8,17 +8,17 @@ public class SQLEntryVisit {
     public static String PASSWORD = new String("SQLPacaw42!");
 	public static String DB_URL = new String("jdbc:mysql://localhost:3306/test");
 	public static String JDBC_DRIVER = new String("com.mysql.cj.jdbc.Driver");
-	static List<String> InsertRows = new ArrayList<String>();
+	static List<String> SQLStatement = new ArrayList<String>();
 	
-	public void setInsertRow(String statement) {
-		InsertRows.add(statement);
+	public void setSQLStatement(String statement) {
+		SQLStatement.add(statement);
 	}
 	
 	public void clear() {
-		InsertRows.clear();
+		SQLStatement.clear();
 	}
 	
-	public void addEntries() throws ClassNotFoundException {
+	public void modifyEntries() throws ClassNotFoundException {
 		Class.forName(JDBC_DRIVER);
 		try
 		{
@@ -26,10 +26,10 @@ public class SQLEntryVisit {
 			
 			Statement stmt = con.createStatement();
 			
-			for (int i = 0; i<InsertRows.size(); i++)
+			for (int i = 0; i<SQLStatement.size(); i++)
 			{
-				System.out.print(InsertRows.get(i) + "...");
-				int rowsAffected = stmt.executeUpdate(InsertRows.get(i));
+				System.out.print(SQLStatement.get(i) + "...");
+				int rowsAffected = stmt.executeUpdate(SQLStatement.get(i));
 				if(rowsAffected == 1)
 					System.out.println("OK");
 			}

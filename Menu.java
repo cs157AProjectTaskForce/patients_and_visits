@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -402,10 +404,13 @@ public class Menu {
 			}
 			
 			JTable visitTable = new JTable(dtm) {
+				
 				public boolean isCellEditable(int rowIndex, int colIndex) {
 					return false;
 				}
+						
 			};
+			
 			visitTable.setRowSelectionAllowed(true);
 			visitTable.setAutoCreateRowSorter(true);
 			JScrollPane scrollPane = new JScrollPane(visitTable);
@@ -413,17 +418,36 @@ public class Menu {
 			JButton viewVisit = new JButton("View/Edit Visit");
 			viewVisit.setPreferredSize(new Dimension(125, 30));
 			viewVisit.addActionListener(event -> {
-				
+				try {
+					rs.absolute(visitTable.getSelectedRow() + 1);
+					Object[] value = new Object[rsmd.getColumnCount()];
+					for(int i = 0; i < rsmd.getColumnCount(); ++i)
+					{
+						value[i] = rs.getObject(i + 1);
+					}
+					editVisit(value, frame);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			});
 			options.add(viewVisit);
 			
 			JButton deleteVisit = new JButton("Delete Visit");
 			deleteVisit.setPreferredSize(new Dimension(125, 30));
 			deleteVisit.addActionListener(event -> {
-				dtm.removeRow(visitTable.getSelectedRow());
+				try {
+					rs.absolute(visitTable.getSelectedRow() + 1);
+					deleteVisit(rs.getInt(1));
+					dtm.removeRow(visitTable.getSelectedRow());
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			});
 			options.add(deleteVisit);
 			
+			//Doesn't need Action Listener
 			JButton Analyze = new JButton("Analyze");
 			Analyze.setPreferredSize(new Dimension(125, 30));
 			options.add(Analyze);
@@ -455,20 +479,20 @@ public class Menu {
 		
 		private static void setHeaderVisit(JPanel header, List<JTextField> list)
 		{
-			addTextField(header, list, "First Name:");
+			addTextField(header, list, "First Name:*");
 			addTextField(header, list, "Middle Name:");
-			addTextField(header, list, "Last Name:");
-			addTextField(header, list, "THC#:");
+			addTextField(header, list, "Last Name:*");
+			addTextField(header, list, "THC#:*");
 		}
 		
 		private static void setCenterVisit(JPanel center, List<JTextField> list, List<JTextArea> area)
 		{
-			addTextField(center, list, "Problem:");
-			addTextField(center, list, "Category:");
-			addTextField(center, list, "Protocol:");
+			addTextField(center, list, "Problem:*");
+			addTextField(center, list, "Category:*");
+			addTextField(center, list, "Protocol:*");
 			addTextField(center, list, "FU:");
-			addTextField(center, list, "Instrument");
-			addTextField(center, list, "REM:");
+			addTextField(center, list, "Instrument*");
+			addTextField(center, list, "REM*:");
 			JPanel temp = new JPanel();
 			JLabel tempLabel = new JLabel("Comments:");
 			JTextArea addComments = new JTextArea(2,30);
@@ -476,7 +500,7 @@ public class Menu {
 			temp.add(addComments, BorderLayout.CENTER);
 			center.add(temp);
 			area.add(addComments);
-			addTextField(center, list, "Next Visit:");
+			addTextField(center, list, "Next Visit:*");
 		}
 		
 		private static void setPanel(JPanel panel, List<JTextField> list)
@@ -531,6 +555,9 @@ public class Menu {
 			
 			String FName = header.get(0).getText();
 			String MName = header.get(1).getText();
+			if(MName.equals("")) {
+				MName = null;
+			}
 			String LName = header.get(2).getText();
 			String THC = header.get(3).getText();
 			
@@ -546,9 +573,15 @@ public class Menu {
 			String cat = center.get(1).getText();
 			String prot = center.get(2).getText();
 			String FU = center.get(3).getText();
+			if(FU.equals("")) {
+				FU = "NULL";
+			}
 			String Instrument = center.get(4).getText();
 			String REM = center.get(5).getText();
 			String com = area.get(0).getText();
+			if(com.equals("")) {
+				com = "NULL";
+			}
 			String vis = center.get(6).getText();
 			String SQL = "insert into VISIT values ('" + id + "','" + Date + "','" + THC
 					+ "','" + FName + "','" + MName + "','" + LName + "','" + Vno + "','" +  cat + "','" + prot + "','" +
@@ -556,13 +589,132 @@ public class Menu {
 			System.out.println(SQL);
 
 			SQLEntryVisit add = new SQLEntryVisit();
-			add.setInsertRow(SQL);
+			add.setSQLStatement(SQL);
 			try {
-				add.addEntries();
+				add.modifyEntries();
 			} catch (ClassNotFoundException e) {
 				System.out.println(e);
 			}
 			add.clear();
 		}
 		
+		private static void deleteVisit(int rowNumber)
+		{
+			SQLEntryVisit delete = new SQLEntryVisit();
+			delete.setSQLStatement("delete from VISIT where ID=" + rowNumber);
+			try {
+				delete.modifyEntries();
+			} catch (ClassNotFoundException e) {
+				System.out.println(e);
+			}
+			delete.clear();
+		}
+
+		private static void editVisit(Object[] data, JFrame frame)
+		{
+			frame.setTitle("View/Edit Visits");
+			frame.getContentPane().removeAll();
+			frame.setSize(900, 450);
+			
+			JPanel overall = new JPanel(new BorderLayout(10, 10));
+			JPanel dataPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
+			JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
+			List<JTextField> holder = new ArrayList<JTextField>();
+			List<JTextArea> areaHolder = new ArrayList<JTextArea>();
+			addTextField(dataPanel, holder, "THC");
+			holder.get(0).setText(data[2].toString());
+			addTextField(dataPanel, holder, "First Name");
+			holder.get(1).setText(data[3].toString());
+			addTextField(dataPanel, holder, "Middle Name");
+			holder.get(2).setText(data[4].toString());
+			addTextField(dataPanel, holder, "Last Name");
+			holder.get(3).setText(data[5].toString());
+			addTextField(dataPanel, holder, "Category");
+			holder.get(4).setText(data[7].toString());
+			addTextField(dataPanel, holder, "Protocol");
+			holder.get(5).setText(data[8].toString());
+			addTextField(dataPanel, holder, "Instrument");
+			holder.get(6).setText(data[9].toString());
+			addTextField(dataPanel, holder, "REM");
+			holder.get(7).setText(data[10].toString());
+			addTextField(dataPanel, holder, "FU");
+			holder.get(8).setText(data[11].toString());
+			JPanel temp = new JPanel();
+			JLabel tempLabel = new JLabel("Comments:");
+			JTextArea addComments = new JTextArea(2,30);
+			temp.add(tempLabel, BorderLayout.NORTH);
+			temp.add(addComments, BorderLayout.CENTER);
+			dataPanel.add(temp);
+			areaHolder.add(addComments);
+			areaHolder.get(0).setText(data[12].toString());
+			addTextField(dataPanel, holder, "Next Visit");
+			holder.get(9).setText(data[13].toString());
+			
+			JButton Save = new JButton("Save");
+			Save.setPreferredSize(new Dimension(100, 30));
+			Save.addActionListener(event -> {
+				try {
+					saveEditVisit(Integer.parseInt(data[0].toString()), holder, areaHolder);
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+		
+			buttons.add(Save);
+			
+			JButton Cancel = new JButton("Cancel");
+			Cancel.setPreferredSize(new Dimension(100, 30));
+			Cancel.addActionListener(event -> {
+				try {
+					viewVisits(frame);
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+			buttons.add(Cancel);
+			
+			overall.add(dataPanel, BorderLayout.CENTER);
+			overall.add(buttons, BorderLayout.SOUTH);
+			frame.setContentPane(overall);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setVisible(true);
+		}
+		
+		private static void saveEditVisit(int id, List<JTextField> text, List<JTextArea> comment) throws SQLException {
+			String FName = text.get(1).getText();
+			String MName = text.get(2).getText();
+			String LName = text.get(3).getText();
+			String THC = text.get(0).getText();
+			String cat = text.get(4).getText();
+			String prot = text.get(5).getText();
+			String FU = text.get(8).getText();
+			String Instrument = text.get(6).getText();
+			String REM = text.get(7).getText();
+			String com = comment.get(0).getText();
+			String vis = text.get(9).getText();
+			String SQL = "update VISIT set THC='" + THC + "', FIRST_NAME='" + FName + "', MIDDLE_NAME='"
+					+ MName + "', LAST_NAME='" + LName + "', CATEGORY='" + cat + "', PROTOCOL='" + prot +
+					"', INSTRUMENT='" + Instrument + "', REM='" + REM + "', FU='" + FU + "', COMMENTS='" +
+					com + "', NEXT_VISIT='" + vis + "' where ID ='" + id + "'";
+			System.out.println(SQL);
+
+			SQLEntryVisit update = new SQLEntryVisit();
+			update.setSQLStatement(SQL);
+			try {
+				update.modifyEntries();
+			} catch (ClassNotFoundException e) {
+				System.out.println(e);
+			}
+			update.clear();
+		}
 }
+
+

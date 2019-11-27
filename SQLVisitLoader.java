@@ -49,7 +49,9 @@ public class SQLVisitLoader {
 			// Submit a query, creating a ResultSet object
 			ResultSet rs = stmt.executeQuery("SELECT * FROM VISIT");			
 			rs.last();
-			int last = rs.getRow();
+			int last = rs.getInt(1);
+			System.out.println(last);
+			
 			rs.close();
 			stmt.close();
 			con.close();
@@ -74,10 +76,11 @@ public class SQLVisitLoader {
 			USERNAME, PASSWORD);
 
 			// Create a Statement object so we can submit SQL statements to the driver
-			Statement stmt = con.createStatement();
+			Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, 
+					ResultSet.CONCUR_READ_ONLY);
 
 			// Submit a query, creating a ResultSet object
-			ResultSet rs = stmt.executeQuery("SELECT * FROM VISIT WHERE THC =" + THC);			
+			ResultSet rs = stmt.executeQuery("SELECT * FROM VISIT WHERE THC =" + THC);	
 			rs.last();
 			int last = rs.getRow();
 			rs.close();
