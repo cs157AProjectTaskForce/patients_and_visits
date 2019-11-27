@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -220,18 +222,22 @@ public class Menu {
 			JPanel buttonHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
 			setHeaderVisit(header, headerText);
 			
+			//Needs no actionListener
 			JButton Interview = new JButton("Interview");
 			Interview.setPreferredSize(new Dimension(100, 50));
 			buttonHeader.add(Interview);
 			
+			//Needs no actionListener
 			JButton Audiology = new JButton("Audiology");
 			Audiology.setPreferredSize(new Dimension(100, 50));
 			buttonHeader.add(Audiology);
 			
+			//Needs no actionListener
 			JButton MedicalOther = new JButton("Medical Other");
 			MedicalOther.setPreferredSize(new Dimension(100, 50));
 			buttonHeader.add(MedicalOther);
 			
+			//Needs no actionListener
 			JButton Diagnose = new JButton("Diagnose");
 			Diagnose.setPreferredSize(new Dimension(100, 50));
 			buttonHeader.add(Diagnose);
@@ -242,18 +248,22 @@ public class Menu {
 			JPanel buttonCenter = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 20));
 			setCenterVisit(center, centerText, centerArea);
 			
+			//Needs no actionListener
 			JButton InstrumentDetails = new JButton("Instrument Details");
 			InstrumentDetails.setPreferredSize(new Dimension(100, 50));
 			buttonCenter.add(InstrumentDetails);
 			
+			//Needs no actionListener
 			JButton REMDetails = new JButton("REM Details");
 			REMDetails.setPreferredSize(new Dimension(100, 50));
 			buttonCenter.add(REMDetails);
 			
+			//Needs no actionListener
 			JButton CounselingDetails = new JButton("Counseling Details");
 			CounselingDetails.setPreferredSize(new Dimension(100, 50));
 			buttonCenter.add(CounselingDetails);
 			
+			//Needs no actionListener
 			JButton RecommendTreatment = new JButton("Recommend Treatment");
 			RecommendTreatment.setPreferredSize(new Dimension(100, 50));
 			buttonCenter.add(RecommendTreatment);
@@ -264,13 +274,13 @@ public class Menu {
 			JButton Save = new JButton("Save");
 			Save.setPreferredSize(new Dimension(100, 30));
 			Save.addActionListener(event -> {
-				for(int i = 0; i < headerText.size(); i++) {
-					System.out.println(headerText.get(i).getText());
+				try {
+					saveVisit(headerText, centerText, centerArea);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				for(int j = 0; j < centerText.size(); j++) {
-					System.out.println(centerText.get(j).getText());
-				}
-				System.out.println(centerArea.get(0).getText());
+				displayVisit(frame);
 			});
 			footer.add(Save);
 			
@@ -472,6 +482,48 @@ public class Menu {
 			temp.add(addComments, BorderLayout.CENTER);
 			demoPanel.add(temp);
 			area.add(addComments);
+		}
+		
+		private static void saveVisit(List<JTextField> header, List<JTextField> center, List<JTextArea> area) throws SQLException {
+			int id = 0;
+			SQLVisitLoader test = new SQLVisitLoader();
+			try {
+				ResultSet visits = test.getVisit();
+				visits.last();
+				id = visits.getRow();
+				visits.close();
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			String Date = header.get(1).getText();
+			//String Patient = header.get(2).getText();
+			String FName = "Tom";
+			String LName = "Test";
+			String MName = "T";
+			String THC = header.get(3).getText();
+			String Vno = header.get(4).getText();
+			//String Prob = center.get(0).getText();
+			String cat = center.get(1).getText();
+			String prot = center.get(2).getText();
+			String FU = center.get(3).getText();
+			String Instrument = center.get(4).getText();
+			String REM = center.get(5).getText();
+			String com = area.get(0).getText();
+			String vis = center.get(6).getText();
+			String SQL = "insert into VISIT values ('" + id + "','" + Date + "','" + THC
+					+ "','" + FName + "','" + MName + "','" + LName + "','" + Vno + "','" +  cat + "','" + prot + "','" +
+					Instrument + "','" + REM + "','" + FU + "','" + com + "','" + vis + "')";
+			SQLEntryVisit add = new SQLEntryVisit();
+			add.setInsertRow(SQL);
+			try {
+				add.addEntries();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			add.clear();
 		}
 		
 }
