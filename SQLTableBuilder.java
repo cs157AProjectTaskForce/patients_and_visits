@@ -75,6 +75,23 @@ public class SQLTableBuilder
                     "FU varchar(20), " +
                     "COMMENTS varchar(150), " +
                     "NEXT_VISIT date not null)"
+
+            ,
+
+            "create table Demographics (" +
+                    "THC int(15) not null PRIMARY KEY, " +
+                    "FIRST_NAME varchar(32) not null, " +
+                    "MIDDLE_NAME varchar(32), " +
+                    "LAST_NAME varchar(32) not null, " +
+                    "DATE date not null, " +
+                    "OCCUPATION int(15), " +
+                    "WORK_STATUS int(15)," +
+                    "TINNITUS_ONSET char(3), " +
+                    "TINNITUS_ETIOLOGY char(3), " +
+                    "HYPERACUSIS_ONSET char(3)," +
+                    "HYPERACUSIS_ETIOLOGY char(3), " +
+                    "ADDITIONAL_COMMENTS varchar(150))"
+
     };
 
     public static void main(String[] args) throws ClassNotFoundException
