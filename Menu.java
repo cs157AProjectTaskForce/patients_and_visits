@@ -369,6 +369,7 @@ public class Menu {
 			
 			JPanel view = new JPanel(new BorderLayout(20, 20));
 			JPanel options = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
+
 			//Call SQL command to retrieve the Visits Table
 			//add column names to String[] columns
 			String[] columns = {"New", "Stuff"};
@@ -427,7 +428,6 @@ public class Menu {
 			addTextField(header, list, "Middle Name:");
 			addTextField(header, list, "Last Name:");
 			addTextField(header, list, "THC#:");
-			addTextField(header, list, "Visit no.");
 		}
 		
 		private static void setCenterVisit(JPanel center, List<JTextField> list, List<JTextArea> area)
@@ -488,18 +488,13 @@ public class Menu {
 		
 		private static void saveVisit(List<JTextField> header, List<JTextField> center, List<JTextArea> area) throws SQLException {
 			int id = 0;
-			/*
 			SQLVisitLoader test = new SQLVisitLoader();
 			try {
-				ResultSet visits = test.getVisit();
-				visits.last();
-				id = visits.getRow();
-				visits.close();
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				id = test.getVisitID();
+			} catch (ClassNotFoundException e) {
+				System.out.println(e);
 			}
-			*/
+
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 			String Date = LocalDate.now().format(formatter);
 			
@@ -507,8 +502,16 @@ public class Menu {
 			String MName = header.get(1).getText();
 			String LName = header.get(2).getText();
 			String THC = header.get(3).getText();
-			String Vno = header.get(4).getText();
-			//String Prob = center.get(0).getText();
+			
+			int Vno = 0;
+			try {
+				Vno = test.getVisitSeq(THC);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			String Prob = center.get(0).getText();
 			String cat = center.get(1).getText();
 			String prot = center.get(2).getText();
 			String FU = center.get(3).getText();
@@ -520,17 +523,16 @@ public class Menu {
 					+ "','" + FName + "','" + MName + "','" + LName + "','" + Vno + "','" +  cat + "','" + prot + "','" +
 					Instrument + "','" + REM + "','" + FU + "','" + com + "','" + vis + "')";
 			System.out.println(SQL);
-			/*
+
 			SQLEntryVisit add = new SQLEntryVisit();
 			add.setInsertRow(SQL);
 			try {
 				add.addEntries();
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println(e);
 			}
 			add.clear();
-			*/
 		}
 		
 }

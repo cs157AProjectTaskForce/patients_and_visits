@@ -36,6 +36,7 @@ public class SQLEntryVisit {
 			
 			stmt.close();
 			con.close();
+			clear();
 		}
 		catch (SQLException e)
 		{
