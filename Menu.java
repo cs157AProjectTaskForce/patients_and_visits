@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -421,9 +423,9 @@ public class Menu {
 		
 		private static void setHeaderVisit(JPanel header, List<JTextField> list)
 		{
-			addTextField(header, list, "Visit ID:");
-			addTextField(header, list, "Date:");
-			addTextField(header, list, "Patient:");
+			addTextField(header, list, "First Name:");
+			addTextField(header, list, "Middle Name:");
+			addTextField(header, list, "Last Name:");
 			addTextField(header, list, "THC#:");
 			addTextField(header, list, "Visit no.");
 		}
@@ -486,6 +488,7 @@ public class Menu {
 		
 		private static void saveVisit(List<JTextField> header, List<JTextField> center, List<JTextArea> area) throws SQLException {
 			int id = 0;
+			/*
 			SQLVisitLoader test = new SQLVisitLoader();
 			try {
 				ResultSet visits = test.getVisit();
@@ -496,12 +499,13 @@ public class Menu {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			*/
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			String Date = LocalDate.now().format(formatter);
 			
-			String Date = header.get(1).getText();
-			//String Patient = header.get(2).getText();
-			String FName = "Tom";
-			String LName = "Test";
-			String MName = "T";
+			String FName = header.get(0).getText();
+			String MName = header.get(1).getText();
+			String LName = header.get(2).getText();
 			String THC = header.get(3).getText();
 			String Vno = header.get(4).getText();
 			//String Prob = center.get(0).getText();
@@ -515,6 +519,8 @@ public class Menu {
 			String SQL = "insert into VISIT values ('" + id + "','" + Date + "','" + THC
 					+ "','" + FName + "','" + MName + "','" + LName + "','" + Vno + "','" +  cat + "','" + prot + "','" +
 					Instrument + "','" + REM + "','" + FU + "','" + com + "','" + vis + "')";
+			System.out.println(SQL);
+			/*
 			SQLEntryVisit add = new SQLEntryVisit();
 			add.setInsertRow(SQL);
 			try {
@@ -524,6 +530,7 @@ public class Menu {
 				e.printStackTrace();
 			}
 			add.clear();
+			*/
 		}
 		
 }
