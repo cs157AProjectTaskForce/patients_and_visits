@@ -27,7 +27,7 @@ public class SQLVisitLoader {
 		}
 		catch (SQLException e)
 		{
-          	 	SQLUtil.printSQLExceptions(e);	
+          	 	System.out.println(e);	
           	 	return null;
         }
 	}	
@@ -59,7 +59,7 @@ public class SQLVisitLoader {
 		}
 		catch (SQLException e)
 		{
-          	 	SQLUtil.printSQLExceptions(e);	
+				System.out.println(e);	
           	 	return -1;
         }
 	}
@@ -90,7 +90,7 @@ public class SQLVisitLoader {
 		}
 		catch (SQLException e)
 		{
-          	 	SQLUtil.printSQLExceptions(e);	
+				System.out.println(e);	
           	 	return -1;
         }
 	}
