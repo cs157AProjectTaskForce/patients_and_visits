@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+
+import com.mysql.cj.jdbc.result.ResultSetMetaData;
 
 public class Menu {
 
@@ -92,7 +95,17 @@ public class Menu {
 			
 			JButton ViewEditVisit = new JButton("View/Edit Visits");
 			ViewEditVisit.setPreferredSize(new Dimension(200, 100));
-			ViewEditVisit.addActionListener(event -> viewVisits(frame));
+			ViewEditVisit.addActionListener(event -> {
+				try {
+					viewVisits(frame);
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
 			panel.add(ViewEditVisit);
 			
 			JButton GoBack = new JButton("Go Back");
@@ -361,7 +374,7 @@ public class Menu {
 			frame.setVisible(true);
 		}
 		
-		private static void viewVisits(JFrame frame)
+		private static void viewVisits(JFrame frame) throws ClassNotFoundException, SQLException
 		{
 			frame.setTitle("View/Edit Visits");
 			frame.getContentPane().removeAll();
@@ -370,13 +383,25 @@ public class Menu {
 			JPanel view = new JPanel(new BorderLayout(20, 20));
 			JPanel options = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
 
-			//Call SQL command to retrieve the Visits Table
-			//add column names to String[] columns
-			String[] columns = {"New", "Stuff"};
-			//Iterate through the returned data and add it to JTable.	
-			Object[][] data = {{"Visit", "Visiting"}, {"Abra", "Kadabra"}};
+			SQLVisitLoader test = new SQLVisitLoader();
+			ResultSet rs = test.getVisit();
+			ResultSetMetaData rsmd = (ResultSetMetaData) rs.getMetaData();
+			DefaultTableModel dtm = new DefaultTableModel();
+			for(int i = 0; i < rsmd.getColumnCount(); i++)
+			{
+				dtm.addColumn(rsmd.getColumnName(i+1));
+			}		
+			while (rs.next())
+			{
+				Object [] row = new Object[rsmd.getColumnCount()];
+				for(int i = 0; i < row.length; ++i)
+				{
+					row[i] = rs.getObject(i+1);
+				}
+				dtm.addRow(row);
+			}
 			
-			JTable visitTable = new JTable(data, columns) {
+			JTable visitTable = new JTable(dtm) {
 				public boolean isCellEditable(int rowIndex, int colIndex) {
 					return false;
 				}
@@ -387,10 +412,16 @@ public class Menu {
 			
 			JButton viewVisit = new JButton("View/Edit Visit");
 			viewVisit.setPreferredSize(new Dimension(125, 30));
+			viewVisit.addActionListener(event -> {
+				
+			});
 			options.add(viewVisit);
 			
 			JButton deleteVisit = new JButton("Delete Visit");
 			deleteVisit.setPreferredSize(new Dimension(125, 30));
+			deleteVisit.addActionListener(event -> {
+				dtm.removeRow(visitTable.getSelectedRow());
+			});
 			options.add(deleteVisit);
 			
 			JButton Analyze = new JButton("Analyze");
@@ -529,7 +560,6 @@ public class Menu {
 			try {
 				add.addEntries();
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
 				System.out.println(e);
 			}
 			add.clear();
