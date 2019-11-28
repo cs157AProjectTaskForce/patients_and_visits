@@ -1,18 +1,65 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.*;
+import java.util.Scanner;
 
 public class SQLUpdater
 {
-    public static String USERNAME = new String("User");
-    public static String PASSWORD = new String("pass");
-    public static String DB_URL = new String("jdbc:mysql://localhost:3306/DB_NAME_REPLACE");
-    public static String JDBC_DRIVER = new String("com.mysql.jdbc.Driver");
+    public static String USERNAME = new String("root");
+    public static String PASSWORD = new String("tader123");
+    public static String DB_URL = new String("jdbc:mysql://localhost:3306/test");
+    public static String JDBC_DRIVER = new String("com.mysql.cj.jdbc.Driver");
 
     public static void main(String[] args) throws ClassNotFoundException {
         Connection con = null;
 
         // Load drivers
         Class.forName(JDBC_DRIVER);
-
+        String line = "";
+        String queryString = "";
+        String queries[] = new String[3];
+        int count = 0;
+        try {
+			Scanner scanner = new Scanner(new File("patients_and_visits/sql_queries.txt"));
+			while (scanner.hasNextLine()) {
+				line = scanner.nextLine();
+				boolean insertFound = line.indexOf("INSERT") !=-1? true: false;
+				
+				if (insertFound)
+				{
+					if (!queryString.equals(""))
+					{
+						queries[count++] = queryString;
+						queryString = line;
+					}
+				}
+				else
+				{
+					boolean poundFound = line.indexOf("#") !=-1? true: false;
+					//System.out.println("Adding to string");
+					if (!poundFound)
+					{
+						queryString += line;
+					}
+					
+				}
+			}
+			queries[0] = "INSERT INTO STATE (NAME) VALUES " + queries[0];
+			System.out.println(queries[0]);
+			System.out.println(queries[1]);
+			queries[count] = queryString;
+			
+			scanner.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+        
+        
+        
+        
+        
+        
+        
         try
         {
             // Get a connection from the connection factory
@@ -28,10 +75,14 @@ public class SQLUpdater
             con.setAutoCommit(false);
 
             // Submit the statement
-            for (int i=0; i<UpdateRows.length; ++i)
+            for (int i=0; i<queries.length; ++i)
             {
-                System.out.println(UpdateRows[i] + "...");
-                stmt.addBatch(UpdateRows[i]);
+            	System.out.println(i);
+            	if (i < 2)
+            	{
+            		System.out.println(queries[i] + "...");
+            	}
+                stmt.addBatch(queries[i]);
             }
 
             System.out.println();
@@ -77,10 +128,4 @@ public class SQLUpdater
             }
         }
     }
-
-    // Updates rows using SQL syntax
-    // ex: "update TABLE_NAME set ATTRIBUTE_NAME = XXX where ATTRIBUTE_NAME2 = YYY
-    static String[]	UpdateRows = {
-
-    };
 }
