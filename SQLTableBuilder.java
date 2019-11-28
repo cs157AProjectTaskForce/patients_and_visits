@@ -2,9 +2,9 @@ import java.sql.*;
 
 public class SQLTableBuilder
 {
-    public static String USERNAME = new String("root");
-    public static String PASSWORD = new String("cs157apass");
-    public static String DB_URL = new String("jdbc:mysql://localhost:3306/test");
+    public static String USERNAME = new String("USER");
+    public static String PASSWORD = new String("PASSWORD");
+    public static String DB_URL = new String("jdbc:mysql://localhost:3306/DB_NAME_REPLACE");
     public static String JDBC_DRIVER = new String("com.mysql.jdbc.Driver");
     // SQL Statements to create tables, formatted as strings.
     private static String[]	Tables = {

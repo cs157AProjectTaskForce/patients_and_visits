@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class SQLEntryVisit {
 
-	public static String USERNAME = new String("root");
-    public static String PASSWORD = new String("SQLPacaw42!");
-	public static String DB_URL = new String("jdbc:mysql://localhost:3306/test");
-	public static String JDBC_DRIVER = new String("com.mysql.cj.jdbc.Driver");
+    public static String USERNAME = new String("USER");
+    public static String PASSWORD = new String("PASSWORD");
+    public static String DB_URL = new String("jdbc:mysql://localhost:3306/DB_NAME_REPLACE");
+    public static String JDBC_DRIVER = new String("com.mysql.jdbc.Driver");
 	static List<String> SQLStatement = new ArrayList<String>();
 	
 	public void setSQLStatement(String statement) {
