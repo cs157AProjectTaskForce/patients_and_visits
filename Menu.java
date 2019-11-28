@@ -276,7 +276,7 @@ public class Menu {
 		 * @param frame:	Frame transitions to new screen
 		 * addNewVisit displays the visit form for users to fill out.
 		 * Save: Saves the data entered by the user by calling saveVisit
-		 * Cancel: transitions the user back to DisplayMenu page.	
+		 * Cancel: transitions the user back to DisplayPatient page.	
 		 */
 		private static void addNewVisit(JFrame frame)
 		{
@@ -373,6 +373,16 @@ public class Menu {
 			frame.setVisible(true);
 		}
 		
+		/**
+		 * 
+		 * @param frame:	Frame transitions to new screen
+		 * viewPatients displays a table of all patients.
+		 * View/Edit Patient: transition to new frame showing user info.
+		 * Delete Patient: removes patient from the table and the Database.
+		 * Add New Visit: transitions user to addNewVisit form.
+		 * Current Visit: transitoins user to viewVisits table.
+		 * Cancel: transitions the user back to DisplayVisit page.	
+		 */
 		private static void viewPatients(JFrame frame) throws ClassNotFoundException, SQLException
 		{
 			frame.setTitle("View/Edit Patients");
@@ -491,6 +501,15 @@ public class Menu {
 			frame.setVisible(true);
 		}
 		
+		/**
+		 * 
+		 * @param frame:	Frame transitions to new screen
+		 * viewVisits shows the user all data in Visits Table in JTable form.
+		 * View/Edit Visit: displays clicked visit info and allows user to modify and save/cancel changes.
+		 * Delete Visit: removes visit from JTable and the Database.
+		 * Analyze: does nothing since it was not part of our requirement.
+		 * Cancel: transitions the user back to DisplayMenu page.	
+		 */
 		private static void viewVisits(JFrame frame) throws ClassNotFoundException, SQLException
 		{
 			frame.setTitle("View/Edit Visits");
@@ -578,6 +597,12 @@ public class Menu {
 			frame.setVisible(true);
 		}
 		
+		/**
+		 * 
+		 * @param panel:	The panel where the TextField will be stored in
+		 * @param list:		List of JTextField to store what info is updated on the fields.
+		 * @param label:	What to name each field in a form.	
+		 */
 		private static void addTextField(JPanel panel, List<JTextField> list, String label)
 		{
 			JPanel temp = new JPanel();
@@ -590,6 +615,12 @@ public class Menu {
 			list.add(tempField);
 		}
 		
+		/**
+		 * 
+		 * @param panel:	The panel that will be populated with textfields.
+		 * @param list:		List of JTextField to store what info is updated on the fields.
+		 * Populate the header sectioon of addNewVisit form.
+		 */
 		private static void setHeaderVisit(JPanel header, List<JTextField> list)
 		{
 			addTextField(header, list, "First Name:*");
@@ -598,6 +629,13 @@ public class Menu {
 			addTextField(header, list, "THC#:*");
 		}
 		
+		/**
+		 * 
+		 * @param center:	The panel that will be populated with textfields.
+		 * @param list:		List of JTextField to store what info is updated on the fields.
+		 * @param area:		List of JTextArea to store what info is updated in the area fields.
+		 * Populate the center section of addNewVisit form.
+		 */
 		private static void setCenterVisit(JPanel center, List<JTextField> list, List<JTextArea> area)
 		{
 			addTextField(center, list, "Problem:*");
@@ -616,6 +654,12 @@ public class Menu {
 			addTextField(center, list, "Next Visit:*");
 		}
 		
+		/**
+		 * 
+		 * @param panel:	The panel that will be populated with textfields.
+		 * @param list:		List of JTextField to store what info is updated on the fields.
+		 * Populates the patient form in the addNewPatient form.
+		 */
 		private static void setPanel(JPanel panel, List<JTextField> list)
 		{
 			addTextField(panel, list, "First Name*");
@@ -634,6 +678,13 @@ public class Menu {
 			addTextField(panel, list, "Insurance");	
 		}
 
+		/**
+		 * 
+		 * @param demoPanel:	The panel that will be populated with textfields.
+		 * @param list:		List of JTextField to store what info is updated on the fields.
+		 * @param area:		List of JTextArea to store what info is updated in the area fields.
+		 * Populates the DemoPanel in addNewPatient form. 
+		 */
 		private static void setDemoPanel(JPanel demoPanel, List<JTextField> list, List<JTextArea> area)
 		{
 			addTextField(demoPanel, list, "Occupation");
@@ -653,7 +704,15 @@ public class Menu {
 			demoPanel.add(temp);
 			area.add(addComments);
 		}
-		
+
+		/**
+		 * 
+		 * @param header:	List of JTextField in the header section of addNewVisit form.
+		 * @param center:	List of JTextField in the center section of addNewVisit form.
+		 * @param area:		List of JTextArea in the center section of addNewVisit form.
+		 * This function takes all the values stored in the fields of addNewVisit form and sends the data over to the database through
+		 * SQLEntryVisit object.
+		 */
 		private static void saveVisit(List<JTextField> header, List<JTextField> center, List<JTextArea> area) throws SQLException {
 			int id = 0;
 			SQLVisitLoader test = new SQLVisitLoader();
@@ -709,6 +768,10 @@ public class Menu {
 			add.clear();
 		}
 		
+		/**
+		 * @param rowNumber: Technically a false name, since it is the ID number of the selected row to delete.
+		 * This function will delete the row selected from the JTable and the Database.
+		 */
 		private static void deleteVisit(int rowNumber)
 		{
 			SQLEntryVisit delete = new SQLEntryVisit();
@@ -721,6 +784,11 @@ public class Menu {
 			delete.clear();
 		}
 
+		/**
+		 * @param data: The data in the selected Row
+		 * @param frame: the frame itself since we need to transition to a new screen.
+		 * This function will display the selected row's data and allow users to modify it. User can then save changes or cancel changes.
+		 */
 		private static void editVisit(Object[] data, JFrame frame)
 		{
 			frame.setTitle("View/Edit Visits");
@@ -800,6 +868,12 @@ public class Menu {
 			frame.setVisible(true);
 		}
 		
+		/**
+		 * @param id:	The visit ID that is being updated.
+		 * @param text:	The textfields to retrieve text data from
+		 * @param comment: The JArea comment to retrieve the text data from within it.
+		 * This function will generate an SQL statement and update the database VISIT table with the selected row's new data.
+		 */
 		private static void saveEditVisit(int id, List<JTextField> text, List<JTextArea> comment) throws SQLException {
 			String FName = text.get(1).getText();
 			String MName = text.get(2).getText();
@@ -827,6 +901,11 @@ public class Menu {
 			update.clear();
 		}
 		
+		/**
+		 * @param allText: All the textfields needed to retrieve the data stored in the addNewPatient form.
+		 * This function will generate an SQL statement that will insert a patient into the Patient table in the database.
+		 * @return:	returns a String with the patients THC so it can be used in saveDemographics.
+		 */
 		private static String savePatient(List<JTextField> allText) throws SQLException {
 			SQLPatientLoader test = new SQLPatientLoader();
 			
@@ -927,7 +1006,13 @@ public class Menu {
 		  add.clear();
 		  return THC;
 		}
-		
+
+		/**
+		 * @param THC: The THC of the user that
+		 * @param info, Text: All the textfields with necessary data.
+		 * @param Area: The JTextArea with necessary information to save for demographics.
+		 * This function will generate an SQL statement to save the data for demographics into the demographics table.
+		 */
 		private static void saveDemographics(String THC, List<JTextField> info, List<JTextField> Text, List<JTextArea> Area)
 		{
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -997,6 +1082,10 @@ public class Menu {
 					  
 		}
 		
+		/**
+		 * @param rowNumber: the THC of the row selected.
+		 * This function generates a delete SQL statement to delete the row that has the matching THC number.
+		 */
 		private static void deletePatient(int rowNumber)
 		{
 			SQLEntryPatient delete = new SQLEntryPatient();
@@ -1009,6 +1098,11 @@ public class Menu {
 			delete.clear();
 		}
 
+		/**
+		 * @param data: The data stored in the selected row
+		 * @param frame: frame is needed since we transition between screens.
+		 * This function will display the selected row's data and allow users to modify it. User can save changes or cancel it.
+		 */
 		private static void editPatient(Object[] data, JFrame frame)
 		{
 			frame.setTitle("View/Edit Visits");
@@ -1087,6 +1181,11 @@ public class Menu {
 			frame.setVisible(true);
 		}
 		
+		/**
+		 * @param id: The THC of the patient whose data is being modified.
+		 * @param text: The textfields so we can access the data within them.
+		 * This function will generate an update SQL statement to update the row having the matching THC number.
+		 */
 		private static void saveEditPatient(int id, List<JTextField> text) throws SQLException {
 			String FName = text.get(0).getText();
 			String MName = text.get(1).getText();
