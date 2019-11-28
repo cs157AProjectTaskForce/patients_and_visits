@@ -23,7 +23,7 @@ public class Menu {
 		/**
 		 * @Authors		Leonel, Trevor, Alvin
 		 * @param args	Main program to start the GUI
-		 * @Project		Problem 1
+		 * @Project		Problem 1 of Topics
 		 */
 		public static void main(String[] args)
 		{
