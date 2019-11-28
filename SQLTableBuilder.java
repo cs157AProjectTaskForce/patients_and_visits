@@ -24,13 +24,11 @@ public class SQLTableBuilder
             ,
 
             "create table Work_Status (" +
-                    "ID int(15) not null PRIMARY KEY, " +
-                    "EMPLOYED char(3) not null)"
+                    "EMPLOYED char(3) not null PRIMARY KEY)"
             ,
 
             "create table Occupation (" +
-                    "ID int(15) not null PRIMARY KEY, " +
-                    "JOB_NAME varchar(20) not null, " +
+                    "OCCUPATION varchar(20) not null PRIMARY KEY, " +
                     "DEGREE varchar(20))"
             ,
 
@@ -84,13 +82,15 @@ public class SQLTableBuilder
                     "MIDDLE_NAME varchar(32), " +
                     "LAST_NAME varchar(32) not null, " +
                     "DATE date not null, " +
-                    "OCCUPATION int(15), " +
-                    "WORK_STATUS int(15)," +
+                    "OCCUPATION varchar(20), " +
+                    "WORK_STATUS char(3)," +
                     "TINNITUS_ONSET char(3), " +
                     "TINNITUS_ETIOLOGY char(3), " +
                     "HYPERACUSIS_ONSET char(3)," +
                     "HYPERACUSIS_ETIOLOGY char(3), " +
-                    "ADDITIONAL_COMMENTS varchar(150))"
+                    "ADDITIONAL_COMMENTS varchar(150), " +
+                    "CONSTRAINT p_occupation FOREIGN KEY (OCCUPATION) REFERENCES Occupation(OCCUPATION), " +
+                    "CONSTRAINT p_employed FOREIGN KEY (WORK_STATUS) REFERENCES Work_Status(EMPLOYED))"
 
     };
 
