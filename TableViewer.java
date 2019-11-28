@@ -1,6 +1,6 @@
 import java.sql.*;
 
-class JDBCConnection
+class TableViewer
 {
     public static void main (String args [])
             throws SQLException
