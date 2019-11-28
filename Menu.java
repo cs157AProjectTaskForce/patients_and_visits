@@ -20,13 +20,23 @@ import com.mysql.cj.jdbc.result.ResultSetMetaData;
 public class Menu {
 
 	
+		/**
+		 * @Authors		Leonel, Trevor, Alvin
+		 * @param args	Main program to start the GUI
+		 * @Project		Problem 1
+		 */
 		public static void main(String[] args)
 		{
-			// TODO Auto-generated constructor stub
+			
 			JFrame Screentitle = new JFrame("eTRT");
 			displayMain(Screentitle);
 		}
 
+		/**
+		 * 
+		 * @param frame:	Frame transitions to new screen
+		 * displayMain displays the starting menu for users.	
+		 */
 		private static void displayMain(JFrame frame)
 		{
 			frame.setTitle("eTRT");
@@ -56,6 +66,11 @@ public class Menu {
 			frame.setVisible(true);
 		}
 		
+		/**
+		 * 
+		 * @param frame:	Frame transitions to new screen
+		 * displayPatient displays the patient menu for users.	
+		 */
 		private static void displayPatient(JFrame frame)
 		{
 			frame.setTitle("Patient");
@@ -71,7 +86,15 @@ public class Menu {
 			
 			JButton ViewEditPatient = new JButton("View/Edit Patient");
 			ViewEditPatient.setPreferredSize(new Dimension(200, 100));
-			ViewEditPatient.addActionListener(event -> viewPatients(frame));
+			ViewEditPatient.addActionListener(event -> {
+				try {
+					viewPatients(frame);
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			});
 			panel.add(ViewEditPatient);
 			
 			JButton GoBack = new JButton("Go Back");
@@ -84,6 +107,11 @@ public class Menu {
 			frame.setVisible(true);
 		}
 		
+		/**
+		 * 
+		 * @param frame:	Frame transitions to new screen
+		 * displayVisit displays the visit menu for users.	
+		 */
 		private static void displayVisit(JFrame frame)
 		{
 			frame.setTitle("Visit");
@@ -103,10 +131,8 @@ public class Menu {
 				try {
 					viewVisits(frame);
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			});
@@ -123,6 +149,15 @@ public class Menu {
 			
 		}
 		
+		/**
+		 * 
+		 * @param frame:	Frame transitions to new screen
+		 * addNewPatient displays the form menu for users to fill out. 
+		 * Save takes all filled in data and sends it over to savePatient function
+		 * Demographics and Back transition the user from one screen to the next.	
+		 * Add New Visit saves the user data and then transitions user to addNewVisit menu.
+		 * Cancel transitions the user back to the displayPatient menu.
+		 */
 		private static void addNewPatient(JFrame frame)
 		{
 			
@@ -148,26 +183,25 @@ public class Menu {
 			JButton Save = new JButton("Save");
 			Save.setPreferredSize(new Dimension(100, 30));
 			Save.addActionListener(event -> {
-				//save the data to SQL database
-				//SavePatient();
-				//panelText holds all the content in the textFields.
-				
-				displayPatient(frame);
 				try {
-					savePatient(panelText);
+					String temp = savePatient(panelText);
+					saveDemographics(temp, panelText, demoText, demoArea);
 				} catch (SQLException e) {
-					e.printStackTrace();
+					System.out.println(e);
 				}
+				displayPatient(frame);
 			});
 			panelFooter.add(Save);
 			
 			JButton demoSave = new JButton("Save");
 			demoSave.setPreferredSize(new Dimension(100, 30));
 			demoSave.addActionListener(event -> {
-				//save the data to SQL database
-				//SavePatient();
-				//SaveDemographics();
-				//Demo text and Demo Area hold all the content in the textfields.
+				try {
+					String temp = savePatient(panelText);
+					saveDemographics(temp, panelText, demoText, demoArea);
+				} catch (SQLException e) {
+					System.out.println(e);
+				}
 				displayPatient(frame);
 			});
 			demoFooter.add(demoSave);
@@ -192,24 +226,26 @@ public class Menu {
 			newVisit.setPreferredSize(new Dimension(100, 30));
 			newVisit.addActionListener(event -> 
 			{
-				//save patient first, then new screen.
-				//savePatient();
+				try {
+					String temp = savePatient(panelText);
+					saveDemographics(temp, panelText, demoText, demoArea);
+				} catch (SQLException e) {
+					System.out.println(e);
+				}
 				displayPatient(frame);
-				addNewPatient(frame);
-				
-				// Save visit from new patient
-				displayVisit(frame);
-				addNewVisit(frame);
-				
+				addNewPatient(frame);				
 			});
 			panelFooter.add(newVisit);
 			
 			JButton demoNewVisit = new JButton("New Visit");
 			demoNewVisit.setPreferredSize(new Dimension(100, 30));
 			demoNewVisit.addActionListener(event -> {
-				//save patient first, then new screen
-				//savePatient();
-				//saveDemographics();
+				try {
+					String temp = savePatient(panelText);
+					saveDemographics(temp, panelText, demoText, demoArea);
+				} catch (SQLException e) {
+					System.out.println(e);
+				}
 				displayVisit(frame);
 				addNewVisit(frame);
 			});
@@ -235,6 +271,13 @@ public class Menu {
 			frame.setVisible(true);
 		}
 		
+		/**
+		 * 
+		 * @param frame:	Frame transitions to new screen
+		 * addNewVisit displays the visit form for users to fill out.
+		 * Save: Saves the data entered by the user by calling saveVisit
+		 * Cancel: transitions the user back to DisplayMenu page.	
+		 */
 		private static void addNewVisit(JFrame frame)
 		{
 			frame.setTitle("Add New Visit");
@@ -306,8 +349,7 @@ public class Menu {
 				try {
 					saveVisit(headerText, centerText, centerArea);
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println(e);
 				}
 				displayVisit(frame);
 			});
@@ -331,8 +373,7 @@ public class Menu {
 			frame.setVisible(true);
 		}
 		
-		//Basic framework for it. This creates the table. We need columns = table columns and data = entries in database.
-		private static void viewPatients(JFrame frame)
+		private static void viewPatients(JFrame frame) throws ClassNotFoundException, SQLException
 		{
 			frame.setTitle("View/Edit Patients");
 			frame.getContentPane().removeAll();
@@ -340,39 +381,101 @@ public class Menu {
 			
 			JPanel view = new JPanel(new BorderLayout(20, 20));
 			JPanel options = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
-			//Call SQL command to retrieve the Patient Table
-			//add column names to String[] columns
-			String[] columns = {"Test", "Test2"};
-			//Iterate through the returned data and add it to JTable.	
-			Object[][] data = {{"Test4", "Test4"}, {"Test5", "Test25"}, {"Ok", "Ok"}};
+			SQLPatientLoader test = new SQLPatientLoader();
+			ResultSet rs = test.getPatient();
+			ResultSetMetaData rsmd = (ResultSetMetaData) rs.getMetaData();
+			DefaultTableModel dtm = new DefaultTableModel();
+			for(int i = 0; i < rsmd.getColumnCount(); i++)
+			{
+				dtm.addColumn(rsmd.getColumnName(i+1));
+			}		
+			while (rs.next())
+			{
+				Object [] row = new Object[rsmd.getColumnCount()];
+				for(int i = 0; i < row.length; ++i)
+				{
+					row[i] = rs.getObject(i+1);
+				}
+				dtm.addRow(row);
+			}
 			
-			JTable patientTable = new JTable(data, columns) {
+			JTable patientTable = new JTable(dtm) {
+				
 				public boolean isCellEditable(int rowIndex, int colIndex) {
 					return false;
-				}
+				}		
 			};
+			
 			patientTable.setRowSelectionAllowed(true);
 			patientTable.setAutoCreateRowSorter(true);
 			JScrollPane scrollPane = new JScrollPane(patientTable);
-			
+
 			JButton viewPatient = new JButton("View Patient");
 			viewPatient.setPreferredSize(new Dimension(125, 30));
+			viewPatient.addActionListener(event -> {
+				try {
+					rs.absolute(patientTable.getSelectedRow() + 1);
+					Object[] value = new Object[rsmd.getColumnCount()];
+					for(int i = 0; i < rsmd.getColumnCount(); ++i)
+					{
+						value[i] = rs.getObject(i + 1);
+					}
+					editPatient(value, frame);
+				} catch (SQLException e) {
+					System.out.println(e);
+				}
+			});
 			options.add(viewPatient);
 			
 			JButton EditPatient = new JButton("Edit Patient");
 			EditPatient.setPreferredSize(new Dimension(125, 30));
+			EditPatient.addActionListener(event -> {
+				try {
+					rs.absolute(patientTable.getSelectedRow() + 1);
+					Object[] value = new Object[rsmd.getColumnCount()];
+					for(int i = 0; i < rsmd.getColumnCount(); ++i)
+					{
+						value[i] = rs.getObject(i + 1);
+					}
+					editPatient(value, frame);
+				} catch (SQLException e) {
+					System.out.println(e);
+				}
+			});
 			options.add(EditPatient);
 			
 			JButton deletePatient = new JButton("Delete Patient");
 			deletePatient.setPreferredSize(new Dimension(125, 30));
+			deletePatient.addActionListener(event -> {
+				try {
+					rs.absolute(patientTable.getSelectedRow() + 1);
+					deletePatient(rs.getInt(1));
+					dtm.removeRow(patientTable.getSelectedRow());
+				} catch (SQLException e) {
+					System.out.println(e);
+				}
+			});
 			options.add(deletePatient);
 			
 			JButton addVisit = new JButton("Add New Visit");
 			addVisit.setPreferredSize(new Dimension(125, 30));
+			addVisit.addActionListener(event -> {
+				displayVisit(frame);
+				addNewVisit(frame);
+			});
 			options.add(addVisit);
 			
 			JButton currentVisit = new JButton("Show Current Visit");
 			currentVisit.setPreferredSize(new Dimension(125, 30));
+			currentVisit.addActionListener(event -> {
+				try {
+					viewVisits(frame);
+				} catch (ClassNotFoundException e) {
+					System.out.println(e);
+				} catch (SQLException e) {
+					System.out.println(e);
+				}
+			});
 			options.add(currentVisit);
 			
 			JButton Cancel = new JButton("Cancel");
@@ -439,8 +542,7 @@ public class Menu {
 					}
 					editVisit(value, frame);
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println(e);
 				}
 			});
 			options.add(viewVisit);
@@ -453,8 +555,7 @@ public class Menu {
 					deleteVisit(rs.getInt(1));
 					dtm.removeRow(visitTable.getSelectedRow());
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println(e);
 				}
 			});
 			options.add(deleteVisit);
@@ -598,8 +699,6 @@ public class Menu {
 			String SQL = "insert into VISIT values ('" + id + "','" + Date + "','" + THC
 					+ "','" + FName + "','" + MName + "','" + LName + "','" + Vno + "','" +  cat + "','" + prot + "','" +
 					Instrument + "','" + REM + "','" + FU + "','" + com + "','" + vis + "')";
-			System.out.println(SQL);
-
 			SQLEntryVisit add = new SQLEntryVisit();
 			add.setSQLStatement(SQL);
 			try {
@@ -667,12 +766,15 @@ public class Menu {
 			Save.addActionListener(event -> {
 				try {
 					saveEditVisit(Integer.parseInt(data[0].toString()), holder, areaHolder);
+					try {
+						viewVisits(frame);
+					} catch (ClassNotFoundException e) {
+						System.out.println(e);
+					}
 				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println(e);
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println(e);
 				}
 			});
 		
@@ -684,10 +786,8 @@ public class Menu {
 				try {
 					viewVisits(frame);
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			});
@@ -716,7 +816,6 @@ public class Menu {
 					+ MName + "', LAST_NAME='" + LName + "', CATEGORY='" + cat + "', PROTOCOL='" + prot +
 					"', INSTRUMENT='" + Instrument + "', REM='" + REM + "', FU='" + FU + "', COMMENTS='" +
 					com + "', NEXT_VISIT='" + vis + "' where ID ='" + id + "'";
-			System.out.println(SQL);
 
 			SQLEntryVisit update = new SQLEntryVisit();
 			update.setSQLStatement(SQL);
@@ -728,10 +827,8 @@ public class Menu {
 			update.clear();
 		}
 		
-		
-		private static void savePatient(List<JTextField> allText) throws SQLException {
+		private static String savePatient(List<JTextField> allText) throws SQLException {
 			SQLPatientLoader test = new SQLPatientLoader();
-			
 			
 			// Gets and saves the current date
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -739,15 +836,7 @@ public class Menu {
 			
 			// Generate a random number of 
 			String THC = String.format("%010d", new Random().nextInt(1000000000));
-			
-			
-			for (int i = 0; i < allText.size(); i++)
-			{
-				System.out.println(i);
-				System.out.println(allText.get(i).getText());
-			}
-			
-		// Example of Visit grabbing all necessary info.
+	
 		
 		  String FName = allText.get(0).getText(); 
 		  String MName = allText.get(1).getText(); 
@@ -818,39 +907,100 @@ public class Menu {
 			  Ins = null;
 		  } 
 		  
-		  
-		/*
-		 * String Prob = center.get(0).getText(); String cat = center.get(1).getText();
-		 * String prot = center.get(2).getText(); String FU = center.get(3).getText();
-		 * if(FU.equals("")) { FU = "NULL"; } String Instrument =
-		 * center.get(4).getText(); String REM = center.get(5).getText(); String com =
-		 * area.get(0).getText(); if(com.equals("")) { com = "NULL"; } String vis =
-		 * center.get(6).getText();
-		 */
-		 
-			
 		// Create Patient SQL Insert String
-		
 		  String SQL = "insert into PATIENT values ('" + THC + "','" + Date + "','" +
 		  FName + "','" + MName + "','" + LName + "','" + DoB + "','" + Gender
 		  + "','" + PhoneNum + "','" + Email + "','" + Street + "','" + City + "','" +
 		  State + "','" + Zip + "','" + Country + "','" + Photo + "','" + SSN + "','" +
 		  Ins + "')"; 
-		  System.out.println(SQL);
-		 
 			
 		// Make SQL Entry
 		
-		  SQLEntryPatient add = new SQLEntryPatient(); add.setSQLStatement(SQL); try {
-		  add.modifyEntries(); } catch (ClassNotFoundException e) {
-		  System.out.println(e); } add.clear();
-		 
+		  SQLEntryPatient add = new SQLEntryPatient(); 
+		  add.setSQLStatement(SQL); 
+		  try {
+			  add.modifyEntries(); 
+			  } 
+		  catch (ClassNotFoundException e) {
+				System.out.println(e);
+			  } 
+		  add.clear();
+		  return THC;
+		}
+		
+		private static void saveDemographics(String THC, List<JTextField> info, List<JTextField> Text, List<JTextArea> Area)
+		{
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			String Date = LocalDate.now().format(formatter);
+			
+			String FName = info.get(0).getText(); 
+			String MName = info.get(1).getText(); 
+			if(MName.equals("")) 
+			{ 
+			  MName = null; 
+			} 
+			String LName = info.get(2).getText(); 
+			String Occ = Text.get(0).getText();
+			if(Occ.equals("")) 
+			{ 
+			  Occ = null; 
+			} 
+			String WS = Text.get(1).getText();
+			if(WS.equals("")) 
+			{ 
+			  WS = null; 
+			} 
+			String ED = Text.get(2).getText();
+			if(ED.equals("")) 
+			{ 
+			  ED = null; 
+			} 
+			String TO = Text.get(3).getText();
+			if(TO.equals("")) 
+			{ 
+			  TO = null; 
+			} 
+			String TE = Text.get(4).getText();
+			if(TE.equals("")) 
+			{ 
+			  TE = null; 
+			} 
+			String HO = Text.get(5).getText();
+			if(HO.equals("")) 
+			{ 
+			  HO = null; 
+			} 
+			String HE = Text.get(6).getText();
+			if(HE.equals("")) 
+			{ 
+			  HE = null; 
+			} 
+			String AC = Area.get(0).getText();
+			if(AC.equals("")) 
+			{
+			  AC = null; 
+			} 
+			
+			String SQL = "insert into DEMOGRAPHICS values ('" + THC + "','" + FName + "','" +
+					  MName + "','" + LName + "','" + Date + "','" + Occ + "','" + WS
+					  + "','" + TO + "','" + TE + "','" + HO + "','" + HE + "','" +
+					  AC + "')"; 
+			SQLEntryPatient add = new SQLEntryPatient(); 
+			add.setSQLStatement(SQL); 
+			  try {
+				  add.modifyEntries(); 
+				  } 
+			  catch (ClassNotFoundException e) {
+					System.out.println(e);
+				  } 
+			  add.clear();
+					  
 		}
 		
 		private static void deletePatient(int rowNumber)
 		{
-			SQLEntryVisit delete = new SQLEntryVisit();
-			delete.setSQLStatement("delete from PATIENT where ID=" + rowNumber);
+			SQLEntryPatient delete = new SQLEntryPatient();
+			delete.setSQLStatement("delete from PATIENT where THC=" + rowNumber);
 			try {
 				delete.modifyEntries();
 			} catch (ClassNotFoundException e) {
@@ -869,47 +1019,49 @@ public class Menu {
 			JPanel dataPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
 			JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
 			List<JTextField> holder = new ArrayList<JTextField>();
-			List<JTextArea> areaHolder = new ArrayList<JTextArea>();
-			addTextField(dataPanel, holder, "THC");
-			holder.get(0).setText(data[2].toString());
 			addTextField(dataPanel, holder, "First Name");
-			holder.get(1).setText(data[3].toString());
+			holder.get(0).setText(data[2].toString());
 			addTextField(dataPanel, holder, "Middle Name");
-			holder.get(2).setText(data[4].toString());
+			holder.get(1).setText(data[4].toString());
 			addTextField(dataPanel, holder, "Last Name");
+			holder.get(2).setText(data[3].toString());
+			addTextField(dataPanel, holder, "DOB");
 			holder.get(3).setText(data[5].toString());
-			addTextField(dataPanel, holder, "Category");
-			holder.get(4).setText(data[7].toString());
-			addTextField(dataPanel, holder, "Protocol");
-			holder.get(5).setText(data[8].toString());
-			addTextField(dataPanel, holder, "Instrument");
-			holder.get(6).setText(data[9].toString());
-			addTextField(dataPanel, holder, "REM");
-			holder.get(7).setText(data[10].toString());
-			addTextField(dataPanel, holder, "FU");
-			holder.get(8).setText(data[11].toString());
-			JPanel temp = new JPanel();
-			JLabel tempLabel = new JLabel("Comments:");
-			JTextArea addComments = new JTextArea(2,30);
-			temp.add(tempLabel, BorderLayout.NORTH);
-			temp.add(addComments, BorderLayout.CENTER);
-			dataPanel.add(temp);
-			areaHolder.add(addComments);
-			areaHolder.get(0).setText(data[12].toString());
-			addTextField(dataPanel, holder, "Next Visit");
-			holder.get(9).setText(data[13].toString());
+			addTextField(dataPanel, holder, "Gender");
+			holder.get(4).setText(data[6].toString());
+			addTextField(dataPanel, holder, "Phone");
+			holder.get(5).setText(data[7].toString());
+			addTextField(dataPanel, holder, "Email");
+			holder.get(6).setText(data[8].toString());
+			addTextField(dataPanel, holder, "Street");
+			holder.get(7).setText(data[9].toString());
+			addTextField(dataPanel, holder, "City");
+			holder.get(8).setText(data[10].toString());
+			addTextField(dataPanel, holder, "State");
+			holder.get(9).setText(data[11].toString());
+			addTextField(dataPanel, holder, "Zip");
+			holder.get(10).setText(data[12].toString());
+			addTextField(dataPanel, holder, "Country");
+			holder.get(11).setText(data[13].toString());
+			addTextField(dataPanel, holder, "SSN");
+			holder.get(12).setText(data[15].toString());
+			addTextField(dataPanel, holder, "Insurance");
+			holder.get(13).setText(data[16].toString());
 			
 			JButton Save = new JButton("Save");
 			Save.setPreferredSize(new Dimension(100, 30));
 			Save.addActionListener(event -> {
 				try {
-					saveEditVisit(Integer.parseInt(data[0].toString()), holder, areaHolder);
+					saveEditPatient(Integer.parseInt(data[0].toString()), holder);
+					try {
+						viewPatients(frame);
+					} catch (ClassNotFoundException e) {
+						System.out.println(e);
+					}
 				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println(e);
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println(e);
 				}
 			});
 		
@@ -919,13 +1071,11 @@ public class Menu {
 			Cancel.setPreferredSize(new Dimension(100, 30));
 			Cancel.addActionListener(event -> {
 				try {
-					viewVisits(frame);
+					viewPatients(frame);
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println(e);
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println(e);
 				}
 			});
 			buttons.add(Cancel);
@@ -937,25 +1087,28 @@ public class Menu {
 			frame.setVisible(true);
 		}
 		
-		private static void saveEditPatient(int id, List<JTextField> text, List<JTextArea> comment) throws SQLException {
-			String FName = text.get(1).getText();
-			String MName = text.get(2).getText();
-			String LName = text.get(3).getText();
-			String THC = text.get(0).getText();
-			String cat = text.get(4).getText();
-			String prot = text.get(5).getText();
-			String FU = text.get(8).getText();
-			String Instrument = text.get(6).getText();
-			String REM = text.get(7).getText();
-			String com = comment.get(0).getText();
-			String vis = text.get(9).getText();
-			String SQL = "update VISIT set THC='" + THC + "', FIRST_NAME='" + FName + "', MIDDLE_NAME='"
-					+ MName + "', LAST_NAME='" + LName + "', CATEGORY='" + cat + "', PROTOCOL='" + prot +
-					"', INSTRUMENT='" + Instrument + "', REM='" + REM + "', FU='" + FU + "', COMMENTS='" +
-					com + "', NEXT_VISIT='" + vis + "' where ID ='" + id + "'";
-			System.out.println(SQL);
+		private static void saveEditPatient(int id, List<JTextField> text) throws SQLException {
+			String FName = text.get(0).getText();
+			String MName = text.get(1).getText();
+			String LName = text.get(2).getText();
+			String DOB = text.get(3).getText();
+			String Gender = text.get(4).getText();
+			String Phone = text.get(5).getText();
+			String Email = text.get(6).getText();
+			String Street = text.get(7).getText();
+			String City = text.get(8).getText();
+			String State = text.get(9).getText();
+			String Zip = text.get(10).getText();
+			String Country = text.get(11).getText();
+			String SSN = text.get(12).getText();
+			String Insurance = text.get(13).getText();
+			String SQL = "update PATIENT set FIRST_NAME='" + FName + "', MIDDLE_NAME='"
+					+ MName + "', LAST_NAME='" + LName + "', DATE_OF_BIRTH='" + DOB + "', GENDER='" + Gender +
+					"', PHONE='" + Phone + "', EMAIL='" + Email + "', STREET='" + Street + "', CITY='" +
+					City + "', STATE='" + State + "', ZIP='" + Zip + "', COUNTRY='" + Country + 
+					"', SSN='" + SSN + "', INSURANCE='" + Insurance + "' where THC='" + id + "'";
 
-			SQLEntryVisit update = new SQLEntryVisit();
+			SQLEntryPatient update = new SQLEntryPatient();
 			update.setSQLStatement(SQL);
 			try {
 				update.modifyEntries();
