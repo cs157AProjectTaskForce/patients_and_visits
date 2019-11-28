@@ -2,10 +2,10 @@ import java.sql.*;
 
 public class SQLVisitLoader {
 
-    public static String USERNAME = new String("USER");
-    public static String PASSWORD = new String("PASSWORD");
-    public static String DB_URL = new String("jdbc:mysql://localhost:3306/DB_NAME_REPLACE");
-    public static String JDBC_DRIVER = new String("com.mysql.jdbc.Driver");
+    public static String USERNAME = new String("USER"); //replace user with local username
+    public static String PASSWORD = new String("PASSWORD"); //replace password with local user's password
+    public static String DB_URL = new String("jdbc:mysql://localhost:3306/DB_NAME_REPLACE"); //replace DB_NAME_REPLACE to the database you are using.
+    public static String JDBC_DRIVER = new String("com.mysql.jdbc.Driver"); //this is the SQL driver. don't need to replace.
 	
 	public ResultSet getVisit() throws ClassNotFoundException {
 		Class.forName(JDBC_DRIVER);
