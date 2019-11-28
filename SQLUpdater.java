@@ -20,7 +20,7 @@ public class SQLUpdater
         String queries[] = new String[3];
         int count = 0;
         try {
-			Scanner scanner = new Scanner(new File("patients_and_visits/sql_queries.txt"));
+			Scanner scanner = new Scanner(new File("sql_queries.txt"));
 			while (scanner.hasNextLine()) {
 				line = scanner.nextLine();
 				boolean insertFound = line.indexOf("INSERT") !=-1? true: false;
