@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -18,6 +19,7 @@ import com.mysql.cj.jdbc.result.ResultSetMetaData;
 
 public class Menu {
 
+	
 		public static void main(String[] args)
 		{
 			// TODO Auto-generated constructor stub
@@ -149,7 +151,13 @@ public class Menu {
 				//save the data to SQL database
 				//SavePatient();
 				//panelText holds all the content in the textFields.
+				
 				displayPatient(frame);
+				try {
+					savePatient(panelText);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			});
 			panelFooter.add(Save);
 			
@@ -186,6 +194,10 @@ public class Menu {
 			{
 				//save patient first, then new screen.
 				//savePatient();
+				displayPatient(frame);
+				addNewPatient(frame);
+				
+				// Save visit from new patient
 				displayVisit(frame);
 				addNewVisit(frame);
 				
@@ -689,6 +701,243 @@ public class Menu {
 		}
 		
 		private static void saveEditVisit(int id, List<JTextField> text, List<JTextArea> comment) throws SQLException {
+			String FName = text.get(1).getText();
+			String MName = text.get(2).getText();
+			String LName = text.get(3).getText();
+			String THC = text.get(0).getText();
+			String cat = text.get(4).getText();
+			String prot = text.get(5).getText();
+			String FU = text.get(8).getText();
+			String Instrument = text.get(6).getText();
+			String REM = text.get(7).getText();
+			String com = comment.get(0).getText();
+			String vis = text.get(9).getText();
+			String SQL = "update PATIENT set THC='" + THC + "', FIRST_NAME='" + FName + "', MIDDLE_NAME='"
+					+ MName + "', LAST_NAME='" + LName + "', CATEGORY='" + cat + "', PROTOCOL='" + prot +
+					"', INSTRUMENT='" + Instrument + "', REM='" + REM + "', FU='" + FU + "', COMMENTS='" +
+					com + "', NEXT_VISIT='" + vis + "' where ID ='" + id + "'";
+			System.out.println(SQL);
+
+			SQLEntryVisit update = new SQLEntryVisit();
+			update.setSQLStatement(SQL);
+			try {
+				update.modifyEntries();
+			} catch (ClassNotFoundException e) {
+				System.out.println(e);
+			}
+			update.clear();
+		}
+		
+		
+		private static void savePatient(List<JTextField> allText) throws SQLException {
+			SQLPatientLoader test = new SQLPatientLoader();
+			
+			
+			// Gets and saves the current date
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			String Date = LocalDate.now().format(formatter);
+			
+			// Generate a random number of 
+			String THC = String.format("%010d", new Random().nextInt(1000000000));
+			
+			
+			for (int i = 0; i < allText.size(); i++)
+			{
+				System.out.println(i);
+				System.out.println(allText.get(i).getText());
+			}
+			
+		// Example of Visit grabbing all necessary info.
+		
+		  String FName = allText.get(0).getText(); 
+		  String MName = allText.get(1).getText(); 
+		  if(MName.equals("")) 
+		  { 
+			  MName = null; 
+		  } 
+		  String LName = allText.get(2).getText(); 
+		  
+		  // Get Date of Birth and reformat it appropriately
+		  String DoB = allText.get(3).getText();
+		  String[] splitOnDash = DoB.split("-");
+		  String month = splitOnDash[0];
+		  String day = splitOnDash[1];
+		  String year = splitOnDash[2];
+		  DoB = year + "-" + month + "-" + day;
+		  
+		  // Get gender
+		  String Gender = allText.get(4).getText();
+		  
+		  // Get Phone Number
+		  String PhoneNum = allText.get(5).getText();
+		  
+		  // Get Email
+		  String Email = allText.get(6).getText();
+		  if(Email.equals(""))
+		  { 
+			  Email = null; 
+		  } 
+		  
+		  // Get Street
+		  String Street = allText.get(7).getText();
+		  
+		  // Get City
+		  String City = allText.get(8).getText();
+		  
+		  // Get State
+		  String State = allText.get(9).getText();
+		  if(State.equals("")) 
+		  { 
+			  State = null; 
+		  } 
+		  
+		  // Get Zip
+		  String Zip = allText.get(10).getText();
+		  
+		  // Get Country
+		  String Country = allText.get(11).getText();
+		  
+		  // Get Photo
+		  String Photo = allText.get(12).getText();
+		  if(Photo.equals("")) 
+		  { 
+			  Photo = null; 
+		  } 
+		  
+		  // Get SSN
+		  String SSN = allText.get(12).getText();
+		  if(SSN.equals("")) 
+		  { 
+			  SSN = null; 
+		  }
+		  
+		  // Get Insurance
+		  String Ins = allText.get(13).getText();
+		  if(Ins.equals(""))
+		  { 
+			  Ins = null;
+		  } 
+		  
+		  
+		/*
+		 * String Prob = center.get(0).getText(); String cat = center.get(1).getText();
+		 * String prot = center.get(2).getText(); String FU = center.get(3).getText();
+		 * if(FU.equals("")) { FU = "NULL"; } String Instrument =
+		 * center.get(4).getText(); String REM = center.get(5).getText(); String com =
+		 * area.get(0).getText(); if(com.equals("")) { com = "NULL"; } String vis =
+		 * center.get(6).getText();
+		 */
+		 
+			
+		// Create Patient SQL Insert String
+		
+		  String SQL = "insert into PATIENT values ('" + THC + "','" + Date + "','" +
+		  FName + "','" + MName + "','" + LName + "','" + DoB + "','" + Gender
+		  + "','" + PhoneNum + "','" + Email + "','" + Street + "','" + City + "','" +
+		  State + "','" + Zip + "','" + Country + "','" + Photo + "','" + SSN + "','" +
+		  Ins + "')"; 
+		  System.out.println(SQL);
+		 
+			
+		// Make SQL Entry
+		
+		  SQLEntryPatient add = new SQLEntryPatient(); add.setSQLStatement(SQL); try {
+		  add.modifyEntries(); } catch (ClassNotFoundException e) {
+		  System.out.println(e); } add.clear();
+		 
+		}
+		
+		private static void deletePatient(int rowNumber)
+		{
+			SQLEntryVisit delete = new SQLEntryVisit();
+			delete.setSQLStatement("delete from PATIENT where ID=" + rowNumber);
+			try {
+				delete.modifyEntries();
+			} catch (ClassNotFoundException e) {
+				System.out.println(e);
+			}
+			delete.clear();
+		}
+
+		private static void editPatient(Object[] data, JFrame frame)
+		{
+			frame.setTitle("View/Edit Visits");
+			frame.getContentPane().removeAll();
+			frame.setSize(900, 450);
+			
+			JPanel overall = new JPanel(new BorderLayout(10, 10));
+			JPanel dataPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
+			JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
+			List<JTextField> holder = new ArrayList<JTextField>();
+			List<JTextArea> areaHolder = new ArrayList<JTextArea>();
+			addTextField(dataPanel, holder, "THC");
+			holder.get(0).setText(data[2].toString());
+			addTextField(dataPanel, holder, "First Name");
+			holder.get(1).setText(data[3].toString());
+			addTextField(dataPanel, holder, "Middle Name");
+			holder.get(2).setText(data[4].toString());
+			addTextField(dataPanel, holder, "Last Name");
+			holder.get(3).setText(data[5].toString());
+			addTextField(dataPanel, holder, "Category");
+			holder.get(4).setText(data[7].toString());
+			addTextField(dataPanel, holder, "Protocol");
+			holder.get(5).setText(data[8].toString());
+			addTextField(dataPanel, holder, "Instrument");
+			holder.get(6).setText(data[9].toString());
+			addTextField(dataPanel, holder, "REM");
+			holder.get(7).setText(data[10].toString());
+			addTextField(dataPanel, holder, "FU");
+			holder.get(8).setText(data[11].toString());
+			JPanel temp = new JPanel();
+			JLabel tempLabel = new JLabel("Comments:");
+			JTextArea addComments = new JTextArea(2,30);
+			temp.add(tempLabel, BorderLayout.NORTH);
+			temp.add(addComments, BorderLayout.CENTER);
+			dataPanel.add(temp);
+			areaHolder.add(addComments);
+			areaHolder.get(0).setText(data[12].toString());
+			addTextField(dataPanel, holder, "Next Visit");
+			holder.get(9).setText(data[13].toString());
+			
+			JButton Save = new JButton("Save");
+			Save.setPreferredSize(new Dimension(100, 30));
+			Save.addActionListener(event -> {
+				try {
+					saveEditVisit(Integer.parseInt(data[0].toString()), holder, areaHolder);
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+		
+			buttons.add(Save);
+			
+			JButton Cancel = new JButton("Cancel");
+			Cancel.setPreferredSize(new Dimension(100, 30));
+			Cancel.addActionListener(event -> {
+				try {
+					viewVisits(frame);
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+			buttons.add(Cancel);
+			
+			overall.add(dataPanel, BorderLayout.CENTER);
+			overall.add(buttons, BorderLayout.SOUTH);
+			frame.setContentPane(overall);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setVisible(true);
+		}
+		
+		private static void saveEditPatient(int id, List<JTextField> text, List<JTextArea> comment) throws SQLException {
 			String FName = text.get(1).getText();
 			String MName = text.get(2).getText();
 			String LName = text.get(3).getText();

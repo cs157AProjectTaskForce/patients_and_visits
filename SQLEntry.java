@@ -2,8 +2,8 @@ import java.sql.*;
 
 public class SQLEntry
 {
-    public static String USERNAME = new String("yourname");
-    public static String PASSWORD = new String("yourpasswd");
+    public static String USERNAME = new String("root");
+    public static String PASSWORD = new String("tader123");
     public static String DB_URL = new String("jdbc:mysql://localhost:3306/DB_NAME_REPLACE");
     public static String JDBC_DRIVER = new String("com.mysql.jdbc.Driver");
 
